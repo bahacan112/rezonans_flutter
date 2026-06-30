@@ -254,17 +254,23 @@ class _SpecPainter extends CustomPainter {
       }
     }
 
-    // 5. Draw Hover Indicator Overlay
+    // 5. Draw Hover Indicator Overlay (Thin high-tech cursor line with dots)
     if (hover != null) {
       final int idx = history.indexWhere((p) => p.time == hover!.time);
       if (idx != -1) {
-        final x = idx * colW;
-        canvas.drawRect(
-          Rect.fromLTWH(x, 0, colW, size.height),
+        final x = idx * colW + colW / 2;
+        canvas.drawLine(
+          Offset(x, 0),
+          Offset(x, size.height),
           Paint()
-            ..color = Colors.white.withValues(alpha: 0.06)
-            ..style = PaintingStyle.fill,
+            ..color = AppColors.primaryGold.withValues(alpha: 0.4)
+            ..strokeWidth = 1.5,
         );
+        // Draw small glowing indicator dots at the intersections with frequency lines
+        final dotPaint = Paint()..color = AppColors.primaryGold;
+        for (final yFactor in _bandYFactors) {
+          canvas.drawCircle(Offset(x, yFactor * size.height), 2.5, dotPaint);
+        }
       }
     }
   }
