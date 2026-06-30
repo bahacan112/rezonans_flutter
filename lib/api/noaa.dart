@@ -44,14 +44,14 @@ Future<SchumannData> fetchSchumannData() async {
     double currentKp;
     DateTime updatedAt;
     if (lastObs != -1) {
-      past = items.sublist(max(0, lastObs - 15), lastObs + 1).cast<Map>();
+      past = items.sublist(max(0, lastObs - 23), lastObs + 1).cast<Map>();
       future = items
           .sublist(lastObs + 1, min(lastObs + 9, items.length))
           .cast<Map>();
       currentKp = (items[lastObs]['kp'] as num).toDouble();
       updatedAt = _parseUtc(items[lastObs]['time_tag']);
     } else {
-      past = items.sublist(max(0, items.length - 24)).cast<Map>();
+      past = items.sublist(max(0, items.length - 32)).cast<Map>();
       future = [];
       currentKp = (items.last['kp'] as num).toDouble();
       updatedAt = _parseUtc(items.last['time_tag']);
@@ -73,16 +73,16 @@ Future<SchumannData> fetchSchumannData() async {
 SchumannData _mockData() {
   final now = DateTime.now();
   final history = <HistoryPoint>[];
-  for (int idx = 0; idx < 24; idx++) {
-    final t = now.add(Duration(hours: (idx - 15) * 3));
+  for (int idx = 0; idx < 32; idx++) {
+    final t = now.add(Duration(hours: (idx - 23) * 3));
     // Generate a calm, realistic quiet baseline (values around 0.6 - 1.4)
     double kp = 1.0 + sin(idx * 0.5) * 0.4;
     kp = kp.clamp(0.2, 9.0);
     
-    // Future forecast points (after index 15)
-    final bool isForecast = idx > 15;
+    // Future forecast points (after index 23)
+    final bool isForecast = idx > 23;
     history.add(HistoryPoint(t, (kp * 100).round() / 100, isForecast));
   }
-  final current = history[15].kp;
-  return SchumannData(current, history[15].time, history);
+  final current = history[23].kp;
+  return SchumannData(current, history[23].time, history);
 }
