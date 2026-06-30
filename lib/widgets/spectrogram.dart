@@ -10,8 +10,9 @@ class Spectrogram extends StatefulWidget {
   State<Spectrogram> createState() => _SpectrogramState();
 }
 
-const _hzLabels = ['7.8 Hz', '14 Hz', '20 Hz', '26 Hz', '32 Hz'];
-const _bandYFactors = [0.196, 0.353, 0.508, 0.660, 0.810];
+const _hzLabels = ['0 Hz', '8 Hz', '16 Hz', '24 Hz', '32 Hz', '40 Hz'];
+const _labelYFactors = [0.05, 0.23, 0.41, 0.59, 0.77, 0.95];
+const _bandYFactors = [0.226, 0.367, 0.507, 0.644, 0.779]; // 7.83Hz, 14.1Hz, 20.3Hz, 26.4Hz, 32.4Hz
 
 class _SpectrogramState extends State<Spectrogram> {
   HistoryPoint? hover;
@@ -83,7 +84,7 @@ class _SpectrogramState extends State<Spectrogram> {
                       children: [
                         for (int i = 0; i < _hzLabels.length; i++)
                           Positioned(
-                            top: _bandYFactors[i] * h - 6,
+                            top: _labelYFactors[i] * h - 6,
                             left: 0,
                             right: 0,
                             child: Center(
@@ -170,12 +171,12 @@ class _SpecPainter extends CustomPainter {
       ).createShader(Offset.zero & size);
     canvas.drawRect(Offset.zero & size, bgPaint);
 
-    // 2. Draw Subtle Horizontal Frequency Guide Lines
+    // 2. Draw Subtle Horizontal Frequency Guide Lines (at 8, 16, 24, 32 Hz scale marks)
     final linePaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.05)
-      ..strokeWidth = 1.0;
-    for (final factor in _bandYFactors) {
-      final y = factor * size.height;
+      ..color = Colors.white.withValues(alpha: 0.04)
+      ..strokeWidth = 0.5;
+    for (int i = 1; i < _labelYFactors.length - 1; i++) {
+      final y = _labelYFactors[i] * size.height;
       canvas.drawLine(Offset(0, y), Offset(size.width, y), linePaint);
     }
 
