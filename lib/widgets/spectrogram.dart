@@ -72,10 +72,12 @@ class _SpectrogramState extends State<Spectrogram> {
               height: h,
               color: const Color(0xFF030308),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Y-Axis Labels (Frequencies)
                   Container(
                     width: 44,
+                    height: h,
                     color: const Color(0xFF06060C),
                     child: Stack(
                       children: [
