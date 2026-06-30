@@ -35,16 +35,16 @@ class AnalysisCard extends StatelessWidget {
 
 const _guide = [
   [
-    'Planetary K-Index (Kp Endeksi) Nedir?',
-    'Dünya genelindeki manyetometre istasyonlarından gelen verilerin birleştirilmesiyle oluşturulan ve gezegenimizin manyetik alanındaki düzensizlikleri 0 ile 9 arasında ölçen resmi bir küresel endekstir. Kp değerinin 5 ve üzeri olması küresel bir Jeomanyetik Fırtına durumunu gösterir.'
+    'Schumann Genlik Değeri Nedir?',
+    'Schumann Rezonans Spektrogramında dalgaların gücünü ve iyonosferdeki elektromanyetik uyarılma düzeyini gösteren bilimsel ölçüdür. Bu genlik değerleri, küresel jeomanyetik Kp hareketliliği ile doğrudan doğru orantılıdır; güneş patlamaları arttıkça genlik yükselir ve iyonosferde yoğun ışık kodları tetiklenir.'
   ],
   [
-    'Güneş Fırtınası ve Biyolojik Etkiler:',
-    'Dünya\'nın manyetik alanı ile insan kalp ritmi, sinir sistemi dengesi ve melatonin salgısı doğrudan senkronizedir. Kp endeksinin yükseldiği günlerde baş ağrısı, yorgunluk, rüyalarda berraklık veya uyku bozuklukları gibi semptomlar yaşanması yaygındır.'
+    'Ölçüm (Ölçülen) ve Tahmin (Gelecek) Ayrımı Nedir?',
+    'Uygulamamızdaki grafiklerde altın sarısı kesikli bir "ŞİMDİ" çizgisi yer alır. Bu çizginin sol tarafında kalan net/parlak alanlar iyonosferde ölçülmüş ve kesinleşmiş geçmiş gerçek verileri (Ölçüm), sağ tarafında kalan loş alanlar ise uydulardan gelen verilerle modellenmiş gelecek 24 saatin öngörülerini (Tahmin) gösterir.'
   ],
   [
-    'Gelecek 24 Saat Nasıl Hesaplanır?',
-    'L1 noktasındaki DSCOVR ve ACE uyduları, Güneş patlamasıyla fırlayan parçacıkları yola çıktığı an ölçer. Bu parçacıkların Dünya\'ya ulaşması 15 saat ile 3 gün sürer. Sistem bu verileri işleyerek henüz ulaşmamış kozmik paketleri saatlik modellemeler halinde önceden sunar.'
+    'Kozmik Rezonans ve Biyolojik Etkiler (DNA Aktivasyonu):',
+    'Dünya\'nın manyetik rezonansı ile insan beyninin Alfa dalgaları, sinir sistemi ve hücresel ritimler doğrudan uyumludur. Genlik değerlerinin yükseldiği uyanış pencerelerinde, beden yüksek kozmik frekansları entegre ederken hafif baş ağrısı, rüyalarda berraklık veya uykusuzluk hissedilebilir. Bu dönemler derin meditasyon ve DNA aktivasyonu çalışmaları için en yüksek potansiyele sahiptir.'
   ],
 ];
 
