@@ -12,6 +12,15 @@ class TrendChart extends StatefulWidget {
 class _TrendChartState extends State<TrendChart> {
   HistoryPoint? hover;
 
+  HistoryPoint? get _latestMeasurement {
+    for (int i = widget.history.length - 1; i >= 0; i--) {
+      if (!widget.history[i].predicted) {
+        return widget.history[i];
+      }
+    }
+    return widget.history.isNotEmpty ? widget.history.first : null;
+  }
+
   String _range(DateTime start) {
     final end = start.add(const Duration(hours: 3));
     const days = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
@@ -23,6 +32,7 @@ class _TrendChartState extends State<TrendChart> {
 
   @override
   Widget build(BuildContext context) {
+    final activePoint = hover ?? _latestMeasurement;
     return _card(
       title: 'Jeomanyetik Kp Eğilimi (Son 72 Saat)',
       sub: 'Ölçülen ve tahmin edilen jeomanyetik fırtına değerleri',
@@ -30,11 +40,11 @@ class _TrendChartState extends State<TrendChart> {
         SizedBox(
           height: 24,
           child: Center(
-            child: hover == null
+            child: activePoint == null
                 ? Text('Detayları görmek için sütunların üzerine dokunun',
                     style: AppText.sans(size: 11, color: AppColors.textMuted))
                 : Text(
-                    'Zaman: ${_range(hover!.time)}${hover!.predicted ? ' (Tahmin)' : ' (Ölçüm)'}  |  Kp: ${hover!.kp.toStringAsFixed(2)}',
+                    'Zaman: ${_range(activePoint.time)}${activePoint.predicted ? ' (Tahmin)' : ' (Ölçüm)'}  |  Kp: ${activePoint.kp.toStringAsFixed(2)}',
                     style: AppText.sans(size: 11, color: AppColors.textMuted)),
           ),
         ),

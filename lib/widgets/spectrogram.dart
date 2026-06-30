@@ -18,6 +18,15 @@ const _bandYFactors = [0.07, 0.226, 0.367, 0.507, 0.644, 0.779]; // Geomagnetic 
 class _SpectrogramState extends State<Spectrogram> {
   HistoryPoint? hover;
 
+  HistoryPoint? get _latestMeasurement {
+    for (int i = widget.history.length - 1; i >= 0; i--) {
+      if (!widget.history[i].predicted) {
+        return widget.history[i];
+      }
+    }
+    return widget.history.isNotEmpty ? widget.history.first : null;
+  }
+
   String _range(DateTime start) {
     final end = start.add(const Duration(hours: 3));
     const days = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
@@ -32,6 +41,7 @@ class _SpectrogramState extends State<Spectrogram> {
     const double colW = 16.0; // Narrower columns for higher horizontal resolution
     const double h = 150.0;
     final double totalWidth = widget.history.length * colW;
+    final activePoint = hover ?? _latestMeasurement;
 
     return Container(
       decoration: BoxDecoration(
@@ -56,14 +66,14 @@ class _SpectrogramState extends State<Spectrogram> {
           SizedBox(
             height: 24,
             child: Center(
-              child: hover == null
+              child: activePoint == null
                   ? Text(
                       'Detayları görmek için dalgaların üzerine dokunun',
                       style: AppText.sans(size: 11, color: AppColors.textMuted),
                     )
                   : Text(
-                      'Zaman: ${_range(hover!.time)}${hover!.predicted ? ' (Tahmin)' : ' (Ölçüm)'} | Kp: ${hover!.kp.toStringAsFixed(2)} | ${getKpSpiritualDetails(hover!.kp).label}',
-                      style: AppText.sans(size: 11, color: getKpSpiritualDetails(hover!.kp).color),
+                      'Zaman: ${_range(activePoint.time)}${activePoint.predicted ? ' (Tahmin)' : ' (Ölçüm)'} | Kp: ${activePoint.kp.toStringAsFixed(2)} | ${getKpSpiritualDetails(activePoint.kp).label}',
+                      style: AppText.sans(size: 11, color: getKpSpiritualDetails(activePoint.kp).color),
                     ),
             ),
           ),
@@ -115,7 +125,7 @@ class _SpectrogramState extends State<Spectrogram> {
                         },
                         child: CustomPaint(
                           size: Size(totalWidth, h),
-                          painter: _SpecPainter(widget.history, hover, colW),
+                          painter: _SpecPainter(widget.history, activePoint, colW),
                         ),
                       ),
                     ),
