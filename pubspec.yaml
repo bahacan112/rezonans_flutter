@@ -65,7 +65,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/schuman-logo.png
+    - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -98,5 +98,5 @@ flutter_launcher_icons:
   ios: false
   image_path: "assets/schuman-logo.png"
   adaptive_icon_background: "#111015"
-  adaptive_icon_foreground: "assets/schuman-logo.png"
+  adaptive_icon_foreground: "assets/schuman-logo-adaptive.png"
   remove_alpha_ios: true
