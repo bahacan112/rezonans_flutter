@@ -10,6 +10,9 @@ class Spectrogram extends StatefulWidget {
   State<Spectrogram> createState() => _SpectrogramState();
 }
 
+const _hzLabels = ['7.8 Hz', '14 Hz', '20 Hz', '26 Hz', '32 Hz'];
+const _bandYFactors = [0.196, 0.353, 0.508, 0.660, 0.810];
+
 class _SpectrogramState extends State<Spectrogram> {
   HistoryPoint? hover;
 
@@ -74,16 +77,24 @@ class _SpectrogramState extends State<Spectrogram> {
                   Container(
                     width: 44,
                     color: const Color(0xFF06060C),
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    child: Stack(
                       children: [
-                        Text('7.8 Hz', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.primaryGold)),
-                        Text('14 Hz', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.primaryGold)),
-                        Text('20 Hz', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.primaryGold)),
-                        Text('26 Hz', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.primaryGold)),
-                        Text('32 Hz', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.primaryGold)),
+                        for (int i = 0; i < _hzLabels.length; i++)
+                          Positioned(
+                            top: _bandYFactors[i] * h - 6,
+                            left: 0,
+                            right: 0,
+                            child: Center(
+                              child: Text(
+                                _hzLabels[i],
+                                style: const TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryGold,
+                                ),
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -121,8 +132,7 @@ class _SpecPainter extends CustomPainter {
   final double colW;
   _SpecPainter(this.history, this.hover, this.colW);
 
-  // Y-axis percentage centers of the 5 Schumann resonance frequency bands (top to bottom)
-  static const _bandYFactors = [0.12, 0.32, 0.52, 0.72, 0.88];
+  // The global _bandYFactors is used here instead.
 
   // Map Kp values to a continuous color scale matching the real SOS70 spectrogram
   Color _getSpectrogramColor(double kp) {
