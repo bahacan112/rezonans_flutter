@@ -154,7 +154,11 @@ class _MainScreenState extends State<MainScreen> {
                             onUnlock: _showPremium,
                           ),
                           const SizedBox(height: 15),
-                          AnalysisCard(text: getKpSpiritualDetails(activeKp).desc),
+                          AnalysisCard(
+                            title: 'Schumann Kozmik Enerji Analizi',
+                            spiritual: getKpSpiritualDetails(activeKp).spiritual,
+                            text: getKpSpiritualDetails(activeKp).desc,
+                          ),
                           const SizedBox(height: 15),
                           const GuideAccordion(),
                           const SizedBox(height: 24),

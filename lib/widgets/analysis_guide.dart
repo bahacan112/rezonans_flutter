@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 import '../theme.dart';
 
 class AnalysisCard extends StatelessWidget {
+  final String title;
+  final String spiritual;
   final String text;
-  const AnalysisCard({super.key, required this.text});
+  const AnalysisCard({
+    super.key,
+    required this.title,
+    required this.spiritual,
+    required this.text,
+  });
+
   @override
   Widget build(BuildContext context) => Container(
         width: double.infinity,
@@ -14,10 +22,13 @@ class AnalysisCard extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Jeomanyetik Enerji Analizi',
-              style: AppText.sans(size: 13, weight: FontWeight.w700, color: AppColors.primaryGold)),
+          Text(title,
+              style: AppText.sans(size: 15, weight: FontWeight.w700, color: AppColors.primaryGold)),
+          const SizedBox(height: 5),
+          Text(spiritual,
+              style: AppText.sans(size: 13, weight: FontWeight.w600, color: Colors.white)),
           const SizedBox(height: 8),
-          Text(text, style: AppText.sans(size: 11, height: 1.5)),
+          Text(text, style: AppText.sans(size: 12, height: 1.5, color: AppColors.textMuted)),
         ]),
       );
 }
