@@ -48,7 +48,7 @@ const _guide = [
   ],
   [
     'Tomsk (SOS70) Grafiği ile Neden Farklar Var?',
-    'Tomsk Rasathanesi (SOS70) kendi bilgilendirme sayfasında da belirttiği üzere, "grafiklerdeki dikey beyaz sütunlar genellikle yerel yıldırım deşarjlarından (lokal şimşek fırtınaları) ve bölgesel gürültülerden kaynaklanır." Ayrıca Tomsk web sitesi Rusya/Tomsk saatini (UTC+7) kullanırken, uygulamamız verileri otomatik olarak Türkiye yerel saatine (UTC+3) çevirir. Aradaki 4 saatlik zaman farkı nedeniyle, Tomsk grafiğinde (örneğin saat 16:00\'da) gördüğünüz ortak bir dalgalanma, uygulamamızda tam olarak Türkiye saatiyle 12:00\'ye denk gelir. Uygulamamız ise tüm dünyayı sarsan küresel jeomanyetik fırtınaları (NOAA) temel aldığından, yerel şimşek anlarında Tomsk ile farklar oluşması fiziksel ve bilimsel açıdan tamamen normaldir.'
+    'Tomsk Rasathanesi (SOS70) kendi bilgilendirme sayfasında da belirttiği üzere, "grafiklerdeki dikey beyaz sütunlar genellikle yerel yıldırım deşarjlarından (lokal şimşek fırtınaları) ve bölgesel gürültülerden kaynaklanır." Ayrıca Tomsk web sitesi sadece Rusya/Tomsk saatini (UTC+7) kullanırken, uygulamamız tüm verileri otomatik olarak kullanıcının bulunduğu ülkenin kendi yerel saat dilimine çevirir. Örneğin, Tomsk grafiğinde saat 16:00\'da gördüğünüz ortak bir dalgalanma, Türkiye\'deki (UTC+3) bir kullanıcıda tam olarak saat 12:00\'de, Almanya\'daki (UTC+2) bir kullanıcıda ise saat 11:00\'de görünür. Uygulamamız ise tüm dünyayı sarsan küresel jeomanyetik fırtınaları (NOAA) temel aldığından, yerel şimşek anlarında Tomsk ile farklar oluşması fiziksel ve bilimsel açıdan tamamen normaldir.'
   ],
 ];
 
