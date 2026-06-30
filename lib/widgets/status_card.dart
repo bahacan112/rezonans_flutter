@@ -70,13 +70,13 @@ class _StatusCardState extends State<StatusCard> with SingleTickerProviderStateM
         const SizedBox(width: 20),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(d.label, style: AppText.sans(size: 17, weight: FontWeight.w700)),
+            Text(d.label, style: AppText.sans(size: 19, weight: FontWeight.w700)),
             const SizedBox(height: 3),
             Text(d.spiritual,
-                style: AppText.sans(size: 13, weight: FontWeight.w600, color: AppColors.primaryGold)),
+                style: AppText.sans(size: 15, weight: FontWeight.w600, color: AppColors.primaryGold)),
             const SizedBox(height: 8),
             Text(widget.updatedLabel,
-                style: AppText.sans(size: 13, color: AppColors.textMuted)),
+                style: AppText.sans(size: 14, color: AppColors.textMuted)),
           ]),
         ),
       ]),
