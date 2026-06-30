@@ -32,10 +32,10 @@ class _TrendChartState extends State<TrendChart> {
           child: Center(
             child: hover == null
                 ? Text('Detayları görmek için sütunların üzerine dokunun',
-                    style: AppText.sans(size: 9, color: AppColors.textMuted))
+                    style: AppText.sans(size: 11, color: AppColors.textMuted))
                 : Text(
                     'Zaman: ${_range(hover!.time)}${hover!.predicted ? ' (Tahmin)' : ' (Ölçüm)'}  |  Kp: ${hover!.kp.toStringAsFixed(2)}',
-                    style: AppText.sans(size: 9, color: AppColors.textMuted)),
+                    style: AppText.sans(size: 11, color: AppColors.textMuted)),
           ),
         ),
         const SizedBox(height: 8),
@@ -96,7 +96,7 @@ class _TrendChartState extends State<TrendChart> {
           ),
         ),
         const SizedBox(width: 5),
-        Text(label, style: AppText.sans(size: 9, color: AppColors.textMuted)),
+        Text(label, style: AppText.sans(size: 11, color: AppColors.textMuted)),
       ]);
 }
 
@@ -108,9 +108,9 @@ Widget _card({required String title, required String sub, required Widget child}
       ),
       padding: const EdgeInsets.all(16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(title, style: AppText.sans(size: 14, weight: FontWeight.w700)),
+        Text(title, style: AppText.sans(size: 16, weight: FontWeight.w700)),
         const SizedBox(height: 2),
-        Text(sub, style: AppText.sans(size: 10, color: AppColors.textMuted)),
+        Text(sub, style: AppText.sans(size: 11, color: AppColors.textMuted)),
         const SizedBox(height: 12),
         child,
       ]),

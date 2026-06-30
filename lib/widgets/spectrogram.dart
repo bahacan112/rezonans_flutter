@@ -45,12 +45,12 @@ class _SpectrogramState extends State<Spectrogram> {
         children: [
           Text(
             'Schumann Rezonans Spektrogramı',
-            style: AppText.sans(size: 14, weight: FontWeight.w700),
+            style: AppText.sans(size: 16, weight: FontWeight.w700),
           ),
           const SizedBox(height: 2),
           Text(
             'Atmosferik boşlukta rezonans frekanslarının uyarılma şiddeti',
-            style: AppText.sans(size: 10, color: AppColors.textMuted),
+            style: AppText.sans(size: 11, color: AppColors.textMuted),
           ),
           const SizedBox(height: 8),
           SizedBox(
@@ -59,11 +59,11 @@ class _SpectrogramState extends State<Spectrogram> {
               child: hover == null
                   ? Text(
                       'Detayları görmek için dalgaların üzerine dokunun',
-                      style: AppText.sans(size: 9, color: AppColors.textMuted),
+                      style: AppText.sans(size: 11, color: AppColors.textMuted),
                     )
                   : Text(
                       'Zaman: ${_range(hover!.time)}${hover!.predicted ? ' (Tahmin)' : ' (Ölçüm)'} | Kp: ${hover!.kp.toStringAsFixed(2)} | ${getKpSpiritualDetails(hover!.kp).label}',
-                      style: AppText.sans(size: 9, color: getKpSpiritualDetails(hover!.kp).color),
+                      style: AppText.sans(size: 11, color: getKpSpiritualDetails(hover!.kp).color),
                     ),
             ),
           ),
@@ -92,7 +92,7 @@ class _SpectrogramState extends State<Spectrogram> {
                               child: Text(
                                 _hzLabels[i],
                                 style: const TextStyle(
-                                  fontSize: 9,
+                                  fontSize: 11,
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.primaryGold,
                                 ),
@@ -297,7 +297,7 @@ class _SpecPainter extends CustomPainter {
         text: const TextSpan(
           text: 'ŞİMDİ',
           style: TextStyle(
-            fontSize: 7,
+            fontSize: 9,
             fontWeight: FontWeight.bold,
             color: AppColors.primaryGold,
             letterSpacing: 0.5,
