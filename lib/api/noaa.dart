@@ -34,7 +34,7 @@ Future<SchumannData> fetchSchumannData() async {
     for (int i = items.length - 1; i >= 0; i--) {
       final obs = items[i]['observed'];
       final t = _parseUtc(items[i]['time_tag']);
-      if ((obs == 'observed' || obs == 'estimated') && !t.isAfter(now)) {
+      if ((obs == 'observed' || obs == 'estimated') && !t.add(const Duration(hours: 3)).isAfter(now)) {
         lastObs = i;
         break;
       }
@@ -79,8 +79,8 @@ SchumannData _mockData() {
     double kp = 1.0 + sin(idx * 0.5) * 0.4;
     kp = kp.clamp(0.2, 9.0);
     
-    // Future forecast points (after index 23)
-    final bool isForecast = idx > 23;
+    // Future forecast points (at or after index 23)
+    final bool isForecast = idx >= 23;
     history.add(HistoryPoint(t, (kp * 100).round() / 100, isForecast));
   }
   final current = history[23].kp;
