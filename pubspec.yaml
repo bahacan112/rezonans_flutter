@@ -97,4 +97,6 @@ flutter_launcher_icons:
   android: "launcher_icon"
   ios: false
   image_path: "assets/schuman-logo.png"
+  adaptive_icon_background: "#111015"
+  adaptive_icon_foreground: "assets/schuman-logo.png"
   remove_alpha_ios: true
