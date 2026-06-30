@@ -250,17 +250,22 @@ class _SpecPainter extends CustomPainter {
       }
 
       // 4. Draw Vertical Lightning/Solar Bursts (White vertical streams for high activity points)
+      // These are drawn wider and much more prominent/solid at the top (0-12 Hz region)
+      // and fade out towards the bottom (32-40 Hz), exactly like the real SOS70
       if (kp > 5.0 && !forecast) {
+        final double burstOpacity = ((kp - 5.0) / 4.0).clamp(0.1, 1.0);
         final burstRect = Rect.fromLTRB(x, 0, x + stepWidth + 0.5, size.height);
         final burstPaint = Paint()
           ..shader = LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.white.withValues(alpha: 0.0),
-              Colors.white.withValues(alpha: 0.3 * ((kp - 5.0) / 4.0)),
+              Colors.white.withValues(alpha: 0.65 * burstOpacity),
+              Colors.white.withValues(alpha: 0.50 * burstOpacity),
+              Colors.white.withValues(alpha: 0.15 * burstOpacity),
               Colors.white.withValues(alpha: 0.0),
             ],
+            stops: const [0.0, 0.30, 0.70, 1.0],
           ).createShader(burstRect);
         canvas.drawRect(burstRect, burstPaint);
       }

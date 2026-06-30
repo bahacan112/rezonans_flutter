@@ -75,10 +75,27 @@ SchumannData _mockData() {
   final history = <HistoryPoint>[];
   for (int idx = 0; idx < 24; idx++) {
     final t = now.add(Duration(hours: (idx - 15) * 3));
-    var base = 1.5 + sin(idx * 0.5) * 1.2 + cos(idx * 0.8) * 0.8;
-    if (idx == 12 || idx == 13) base += 2.5;
-    final kp = base.clamp(0.3, 8.7);
-    history.add(HistoryPoint(t, (kp * 100).round() / 100, idx > 15));
+    double kp = 1.3 + sin(idx * 0.7) * 0.5;
+    
+    // Exact SOS70 screenshot pattern replication:
+    // 1. June 28 morning burst (indices around 2-4)
+    if (idx >= 2 && idx <= 4) {
+      kp = 4.2;
+    }
+    // 2. June 29 afternoon burst (indices around 10-12)
+    if (idx >= 10 && idx <= 12) {
+      kp = 5.8;
+    }
+    // 3. June 30 massive storm (indices around 14-17)
+    if (idx >= 14 && idx <= 17) {
+      kp = 8.3; // Trigger the massive vertical white burst!
+    }
+    
+    kp = kp.clamp(0.2, 9.0);
+    
+    // Future forecast points (after index 15)
+    final bool isForecast = idx > 15;
+    history.add(HistoryPoint(t, (kp * 100).round() / 100, isForecast));
   }
   final current = history[15].kp;
   return SchumannData(current, history[15].time, history);
