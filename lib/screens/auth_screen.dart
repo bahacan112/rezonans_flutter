@@ -151,10 +151,13 @@ class _AuthScreenState extends State<AuthScreen> {
         height: 72,
         decoration: BoxDecoration(
           color: AppColors.primaryGold.withValues(alpha: 0.12),
-          shape: BoxShape.circle,
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.primaryGold, width: 1.5),
         ),
-        child: ClipOval(child: Image.asset('assets/schuman-logo.png', fit: BoxFit.cover)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(14),
+          child: Image.asset('assets/schuman-logo.png', fit: BoxFit.cover),
+        ),
       );
 
   Widget _card() => Container(
