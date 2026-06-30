@@ -72,7 +72,7 @@ class _SpectrogramState extends State<Spectrogram> {
                       style: AppText.sans(size: 11, color: AppColors.textMuted),
                     )
                   : Text(
-                      'Zaman: ${_range(activePoint.time)}${activePoint.predicted ? ' (Tahmin)' : ' (Ölçüm)'} | Kp: ${activePoint.kp.toStringAsFixed(2)} | ${getKpSpiritualDetails(activePoint.kp).label}',
+                      'Zaman: ${_range(activePoint.time)}${activePoint.predicted ? ' (Tahmin)' : ' (Ölçüm)'} | Genlik: ${activePoint.kp.toStringAsFixed(2)} | ${getKpSpiritualDetails(activePoint.kp).label}',
                       style: AppText.sans(size: 11, color: getKpSpiritualDetails(activePoint.kp).color),
                     ),
             ),
