@@ -12,7 +12,8 @@ class Spectrogram extends StatefulWidget {
 
 const _hzLabels = ['0 Hz', '8 Hz', '16 Hz', '24 Hz', '32 Hz', '40 Hz'];
 const _labelYFactors = [0.05, 0.23, 0.41, 0.59, 0.77, 0.95];
-const _bandYFactors = [0.226, 0.367, 0.507, 0.644, 0.779]; // 7.83Hz, 14.1Hz, 20.3Hz, 26.4Hz, 32.4Hz
+// Added 0.07 (DC/geomagnetic noise band) just below 0 Hz
+const _bandYFactors = [0.07, 0.226, 0.367, 0.507, 0.644, 0.779]; // Geomagnetic noise + 5 Schumann resonances
 
 class _SpectrogramState extends State<Spectrogram> {
   HistoryPoint? hover;
@@ -207,8 +208,8 @@ class _SpecPainter extends CustomPainter {
       if (x < 0 || x > size.width) continue;
 
       // Draw the spectrogram data as overlapping vertical gradient blobs for each frequency band
-      // Schumann resonance amplitudes decay as frequency increases (7.8Hz is strongest, 32Hz is weakest)
-      const bandIntensityFactors = [1.0, 0.70, 0.45, 0.28, 0.15];
+      // 1st is geomagnetic base noise (0 Hz region), next 5 are Schumann resonance peaks
+      const bandIntensityFactors = [1.1, 1.0, 0.70, 0.45, 0.28, 0.15];
       final double opacityDim = forecast ? 0.35 : 1.0;
       
       for (int j = 0; j < _bandYFactors.length; j++) {
@@ -224,8 +225,9 @@ class _SpecPainter extends CustomPainter {
         final Color baseColor = _getSpectrogramColor(bandKp);
 
         // Define a smooth vertical glow height based on Kp intensity for this specific band
-        // Increased base height (14.0 minimum) and factor to make the continuous horizontal waves visually apparent
-        final double blobHeight = 14.0 + (bandKp * 2.5);
+        // The 0 Hz geomagnetic band (j = 0) is drawn slightly thicker to fill the top space beautifully
+        final double baseBlobHeight = j == 0 ? 18.0 : 14.0;
+        final double blobHeight = baseBlobHeight + (bandKp * (j == 0 ? 3.0 : 2.5));
         final rect = Rect.fromLTRB(
           x,
           yc - (blobHeight / 2),
