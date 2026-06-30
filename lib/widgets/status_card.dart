@@ -76,7 +76,7 @@ class _StatusCardState extends State<StatusCard> with SingleTickerProviderStateM
                 style: AppText.sans(size: 11, weight: FontWeight.w600, color: AppColors.primaryGold)),
             const SizedBox(height: 8),
             Text('Son Ölçüm: ${widget.updatedLabel}',
-                style: AppText.sans(size: 9, color: AppColors.textMuted)),
+                style: AppText.sans(size: 11, color: AppColors.textMuted)),
           ]),
         ),
       ]),

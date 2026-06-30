@@ -64,7 +64,7 @@ class _SpectrogramState extends State<Spectrogram> {
           ),
           const SizedBox(height: 8),
           SizedBox(
-            height: 24,
+            height: 36,
             child: Center(
               child: activePoint == null
                   ? Text(

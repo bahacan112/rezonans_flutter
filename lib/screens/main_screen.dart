@@ -124,6 +124,12 @@ class _MainScreenState extends State<MainScreen> {
                       child: ListView(
                         padding: const EdgeInsets.all(15),
                         children: [
+                          AnalysisCard(
+                            title: 'Schumann Kozmik Enerji Analizi',
+                            spiritual: getKpSpiritualDetails(activeKp).spiritual,
+                            text: getKpSpiritualDetails(activeKp).desc,
+                          ),
+                          const SizedBox(height: 15),
                           _accountCard(user),
                           const SizedBox(height: 15),
                           StatusCard(
@@ -154,22 +160,16 @@ class _MainScreenState extends State<MainScreen> {
                             onUnlock: _showPremium,
                           ),
                           const SizedBox(height: 15),
-                          AnalysisCard(
-                            title: 'Schumann Kozmik Enerji Analizi',
-                            spiritual: getKpSpiritualDetails(activeKp).spiritual,
-                            text: getKpSpiritualDetails(activeKp).desc,
-                          ),
-                          const SizedBox(height: 15),
                           const GuideAccordion(),
                           const SizedBox(height: 24),
                           Center(
                             child: Text('Schumann Kozmik Portal © 2026',
-                                style: AppText.sans(size: 9, color: Colors.white24)),
+                                style: AppText.sans(size: 11, color: Colors.white24)),
                           ),
                           const SizedBox(height: 4),
                           Center(
                             child: Text('v1.0.0 Flutter',
-                                style: AppText.mono(size: 8, color: Colors.white12)),
+                                style: AppText.mono(size: 10, color: Colors.white12)),
                           ),
                         ],
                       ),
@@ -217,7 +217,7 @@ class _MainScreenState extends State<MainScreen> {
               Text('SCHUMANN REZONANSI',
                   style: AppText.sans(size: 15, weight: FontWeight.w800, color: AppColors.primaryGold, letterSpacing: 0.5)),
               Text('Canlı Jeomanyetik Kp ve Kozmik Akış',
-                  style: AppText.sans(size: 10, color: AppColors.textMuted)),
+                  style: AppText.sans(size: 12, color: AppColors.textMuted)),
             ]),
           ),
           _headerBtn(const Center(child: Icon(Icons.refresh, color: AppColors.primaryGold, size: 20)), _load),
@@ -262,9 +262,9 @@ class _MainScreenState extends State<MainScreen> {
         const SizedBox(width: 12),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(user?.name ?? 'Kozmik Yolcu', style: AppText.sans(size: 13, weight: FontWeight.w700), maxLines: 1),
+            Text(user?.name ?? 'Kozmik Yolcu', style: AppText.sans(size: 15, weight: FontWeight.w700), maxLines: 1),
             Text('${user?.email ?? ''}${(user?.isPremium ?? false) ? '  ·  ⭐ Premium' : ''}',
-                style: AppText.sans(size: 10, color: AppColors.textMuted), maxLines: 1),
+                style: AppText.sans(size: 12, color: AppColors.textMuted), maxLines: 1),
           ]),
         ),
         GestureDetector(
@@ -275,7 +275,7 @@ class _MainScreenState extends State<MainScreen> {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
             ),
-            child: Text('Çıkış', style: AppText.sans(size: 11, weight: FontWeight.w600, color: AppColors.textMuted)),
+            child: Text('Çıkış', style: AppText.sans(size: 12, weight: FontWeight.w600, color: AppColors.textMuted)),
           ),
         ),
       ]),

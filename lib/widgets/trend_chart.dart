@@ -38,7 +38,7 @@ class _TrendChartState extends State<TrendChart> {
       sub: 'Ölçülen ve tahmin edilen jeomanyetik fırtına değerleri',
       child: Column(children: [
         SizedBox(
-          height: 24,
+          height: 36,
           child: Center(
             child: activePoint == null
                 ? Text('Detayları görmek için sütunların üzerine dokunun',
