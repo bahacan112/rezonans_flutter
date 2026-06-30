@@ -23,12 +23,12 @@ class AnalysisCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(title,
-              style: AppText.sans(size: 15, weight: FontWeight.w700, color: AppColors.primaryGold)),
+              style: AppText.sans(size: 18, weight: FontWeight.w700, color: AppColors.primaryGold)),
           const SizedBox(height: 5),
           Text(spiritual,
-              style: AppText.sans(size: 13, weight: FontWeight.w600, color: Colors.white)),
+              style: AppText.sans(size: 15, weight: FontWeight.w600, color: Colors.white)),
           const SizedBox(height: 8),
-          Text(text, style: AppText.sans(size: 12, height: 1.5, color: AppColors.textMuted)),
+          Text(text, style: AppText.sans(size: 14, height: 1.5, color: AppColors.textMuted)),
         ]),
       );
 }
@@ -70,11 +70,11 @@ class _GuideAccordionState extends State<GuideAccordion> {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(children: [
-                const Text('ⓘ', style: TextStyle(color: AppColors.primaryGold, fontSize: 16)),
+                const Text('ⓘ', style: TextStyle(color: AppColors.primaryGold, fontSize: 18)),
                 const SizedBox(width: 10),
                 Expanded(
                     child: Text('Jeomanyetik Rezonans Kılavuzu',
-                        style: AppText.sans(size: 13, weight: FontWeight.w700))),
+                        style: AppText.sans(size: 15, weight: FontWeight.w700))),
                 Icon(open ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
                     color: open ? AppColors.primaryGold : AppColors.textMuted, size: 20),
               ]),
@@ -87,9 +87,9 @@ class _GuideAccordionState extends State<GuideAccordion> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   for (final g in _guide) ...[
-                    Text(g[0], style: AppText.sans(size: 11, weight: FontWeight.w700, color: AppColors.primaryGold)),
+                    Text(g[0], style: AppText.sans(size: 13, weight: FontWeight.w700, color: AppColors.primaryGold)),
                     const SizedBox(height: 3),
-                    Text(g[1], style: AppText.sans(size: 10, color: AppColors.textMuted, height: 1.4)),
+                    Text(g[1], style: AppText.sans(size: 12, color: AppColors.textMuted, height: 1.45)),
                     const SizedBox(height: 12),
                   ],
                 ],

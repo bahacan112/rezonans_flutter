@@ -52,27 +52,28 @@ class _SpectrogramState extends State<Spectrogram> {
         children: [
           Text(
             'Schumann Rezonans Spektrogramı',
-            style: AppText.sans(size: 16, weight: FontWeight.w700),
+            style: AppText.sans(size: 18, weight: FontWeight.w700),
           ),
           const SizedBox(height: 2),
           Text(
             'Atmosferik boşlukta rezonans frekanslarının uyarılma şiddeti',
-            style: AppText.sans(size: 11, color: AppColors.textMuted),
+            style: AppText.sans(size: 13, color: AppColors.textMuted),
           ),
           const SizedBox(height: 8),
-          SizedBox(
-            height: 36,
-            child: Center(
-              child: activePoint == null
-                  ? Text(
-                      'Detayları görmek için dalgaların üzerine dokunun',
-                      style: AppText.sans(size: 11, color: AppColors.textMuted),
-                    )
-                  : Text(
-                      'Zaman: ${_range(activePoint.time)}${activePoint.predicted ? ' (Tahmin)' : ' (Ölçüm)'} | Genlik: ${activePoint.kp.toStringAsFixed(2)} | ${getKpSpiritualDetails(activePoint.kp).label}',
-                      style: AppText.sans(size: 11, color: getKpSpiritualDetails(activePoint.kp).color),
-                    ),
-            ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            alignment: Alignment.center,
+            child: activePoint == null
+                ? Text(
+                    'Detayları görmek için dalgaların üzerine dokunun',
+                    style: AppText.sans(size: 13, color: AppColors.textMuted),
+                    textAlign: TextAlign.center,
+                  )
+                : Text(
+                    'Zaman: ${_range(activePoint.time)}${activePoint.predicted ? ' (Tahmin)' : ' (Ölçüm)'} | Genlik: ${activePoint.kp.toStringAsFixed(2)} | ${getKpSpiritualDetails(activePoint.kp).label}',
+                    style: AppText.sans(size: 13, color: getKpSpiritualDetails(activePoint.kp).color),
+                    textAlign: TextAlign.center,
+                  ),
           ),
           const SizedBox(height: 8),
           ClipRRect(
@@ -99,7 +100,7 @@ class _SpectrogramState extends State<Spectrogram> {
                               child: Text(
                                 _hzLabels[i],
                                 style: const TextStyle(
-                                  fontSize: 11,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.primaryGold,
                                 ),

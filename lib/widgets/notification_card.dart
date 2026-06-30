@@ -33,18 +33,18 @@ class NotificationCard extends StatelessWidget {
       return GestureDetector(
         onTap: onUnlock,
         child: _wrap(Row(children: [
-          const Text('🔒', style: TextStyle(fontSize: 16)),
+          const Text('🔒', style: TextStyle(fontSize: 18)),
           const SizedBox(width: 12),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
-                Flexible(child: Text('Kozmik Rezonans Bildirimleri', style: AppText.sans(size: 12, weight: FontWeight.w700))),
+                Flexible(child: Text('Kozmik Rezonans Bildirimleri', style: AppText.sans(size: 15, weight: FontWeight.w700))),
                 const SizedBox(width: 8),
                 _badge('PREMIUM', AppColors.primaryGold, Colors.black),
               ]),
               const SizedBox(height: 6),
               Text('Hangi Kp aralıklarında bildirim alacağınızı seçin. Premium\'a yükselterek aktif edin.',
-                  style: AppText.sans(size: 10, color: AppColors.textMuted, height: 1.4)),
+                  style: AppText.sans(size: 12, color: AppColors.textMuted, height: 1.45)),
             ]),
           ),
           const SizedBox(width: 8),
@@ -54,7 +54,7 @@ class NotificationCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: AppColors.primaryGold.withValues(alpha: 0.45), width: 1.5),
             ),
-            child: Text('Satın Al', style: AppText.sans(size: 11, weight: FontWeight.w700, color: AppColors.primaryGold)),
+            child: Text('Satın Al', style: AppText.sans(size: 13, weight: FontWeight.w700, color: AppColors.primaryGold)),
           ),
         ])),
       );
@@ -64,15 +64,15 @@ class NotificationCard extends StatelessWidget {
     return _wrap(Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Row(children: [
-          const Text('🔔', style: TextStyle(fontSize: 16)),
+          const Text('🔔', style: TextStyle(fontSize: 18)),
           const SizedBox(width: 8),
-          Text('Kozmik Rezonans Bildirimleri', style: AppText.sans(size: 12, weight: FontWeight.w700)),
+          Text('Kozmik Rezonans Bildirimleri', style: AppText.sans(size: 15, weight: FontWeight.w700)),
         ]),
         _badge(anyOn ? 'AKTİF' : 'KAPALI', anyOn ? KpColors.portal : Colors.white24, anyOn ? Colors.black : Colors.white),
       ]),
       const SizedBox(height: 8),
       Text('Bildirim almak istediğiniz Kp aralıklarını seçin. Sadece seçtikleriniz hem uygulamada hem telefon bildirimi olarak gelir.',
-          style: AppText.sans(size: 10, color: AppColors.textMuted, height: 1.4)),
+          style: AppText.sans(size: 12, color: AppColors.textMuted, height: 1.45)),
       const SizedBox(height: 4),
       for (final b in _bands)
         Container(
@@ -85,8 +85,8 @@ class NotificationCard extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(b.label, style: AppText.sans(size: 12, weight: FontWeight.w600)),
-                Text(b.range, style: AppText.mono(size: 10, color: AppColors.textMuted)),
+                Text(b.label, style: AppText.sans(size: 14, weight: FontWeight.w600)),
+                Text(b.range, style: AppText.mono(size: 12, color: AppColors.textMuted)),
               ]),
             ),
             Switch(

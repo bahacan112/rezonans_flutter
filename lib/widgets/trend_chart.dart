@@ -34,16 +34,17 @@ class _TrendChartState extends State<TrendChart> {
       title: 'Jeomanyetik Kp Eğilimi (Son 72 Saat)',
       sub: 'Ölçülen ve tahmin edilen jeomanyetik fırtına değerleri',
       child: Column(children: [
-        SizedBox(
-          height: 36,
-          child: Center(
-            child: activePoint == null
-                ? Text('Detayları görmek için sütunların üzerine dokunun',
-                    style: AppText.sans(size: 11, color: AppColors.textMuted))
-                : Text(
-                    'Zaman: ${_range(activePoint.time)}${activePoint.predicted ? ' (Tahmin)' : ' (Ölçüm)'}  |  Kp: ${activePoint.kp.toStringAsFixed(2)}',
-                    style: AppText.sans(size: 11, color: AppColors.textMuted)),
-          ),
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          alignment: Alignment.center,
+          child: activePoint == null
+              ? Text('Detayları görmek için sütunların üzerine dokunun',
+                  style: AppText.sans(size: 13, color: AppColors.textMuted),
+                  textAlign: TextAlign.center)
+              : Text(
+                  'Zaman: ${_range(activePoint.time)}${activePoint.predicted ? ' (Tahmin)' : ' (Ölçüm)'}  |  Kp: ${activePoint.kp.toStringAsFixed(2)}',
+                  style: AppText.sans(size: 13, color: AppColors.textMuted),
+                  textAlign: TextAlign.center),
         ),
         const SizedBox(height: 8),
         SizedBox(
@@ -103,7 +104,7 @@ class _TrendChartState extends State<TrendChart> {
           ),
         ),
         const SizedBox(width: 5),
-        Text(label, style: AppText.sans(size: 11, color: AppColors.textMuted)),
+        Text(label, style: AppText.sans(size: 13, color: AppColors.textMuted)),
       ]);
 }
 
@@ -115,9 +116,9 @@ Widget _card({required String title, required String sub, required Widget child}
       ),
       padding: const EdgeInsets.all(16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(title, style: AppText.sans(size: 16, weight: FontWeight.w700)),
+        Text(title, style: AppText.sans(size: 18, weight: FontWeight.w700)),
         const SizedBox(height: 2),
-        Text(sub, style: AppText.sans(size: 11, color: AppColors.textMuted)),
+        Text(sub, style: AppText.sans(size: 13, color: AppColors.textMuted)),
         const SizedBox(height: 12),
         child,
       ]),

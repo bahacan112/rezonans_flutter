@@ -27,7 +27,7 @@ class Simulator extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text('Kozmik Enerji Simülatörü', style: AppText.sans(size: 16, weight: FontWeight.w700)),
+          Text('Kozmik Enerji Simülatörü', style: AppText.sans(size: 18, weight: FontWeight.w700)),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
@@ -36,14 +36,14 @@ class Simulator extends StatelessWidget {
               border: Border.all(color: KpColors.portal.withValues(alpha: 0.3)),
             ),
             child: Text('TEST PANELİ',
-                style: AppText.sans(size: 8, weight: FontWeight.w800, color: KpColors.portal)),
+                style: AppText.sans(size: 10, weight: FontWeight.w800, color: KpColors.portal)),
           ),
         ]),
         const SizedBox(height: 2),
         Text('Farklı Genlik seviyelerinin etkilerini ve renk değişimlerini test edin',
-            style: AppText.sans(size: 11, color: AppColors.textMuted)),
+            style: AppText.sans(size: 13, color: AppColors.textMuted)),
         Row(children: [
-          Text('Genlik 0', style: AppText.mono(size: 11, color: AppColors.textMuted)),
+          Text('Genlik 0', style: AppText.mono(size: 13, color: AppColors.textMuted)),
           Expanded(
             child: SliderTheme(
               data: SliderTheme.of(context).copyWith(
@@ -55,12 +55,12 @@ class Simulator extends StatelessWidget {
               child: Slider(min: 0, max: 9, value: value, onChanged: onChanged),
             ),
           ),
-          Text('Genlik 9', style: AppText.mono(size: 11, color: AppColors.textMuted)),
+          Text('Genlik 9', style: AppText.mono(size: 13, color: AppColors.textMuted)),
         ]),
         Row(children: [
-          Text('Simüle Edilen Değer: ', style: AppText.sans(size: 12, color: AppColors.textMuted)),
+          Text('Simüle Edilen Değer: ', style: AppText.sans(size: 14, color: AppColors.textMuted)),
           Text(simulating ? 'Genlik ${value.toStringAsFixed(1)}' : 'Canlı Akış',
-              style: AppText.sans(size: 12, weight: FontWeight.w700, color: color)),
+              style: AppText.sans(size: 14, weight: FontWeight.w700, color: color)),
           const Spacer(),
           if (simulating)
             GestureDetector(
@@ -72,7 +72,7 @@ class Simulator extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
                 ),
-                child: Text('Canlı Veriye Dön', style: AppText.sans(size: 11)),
+                child: Text('Canlı Veriye Dön', style: AppText.sans(size: 13)),
               ),
             ),
         ]),
