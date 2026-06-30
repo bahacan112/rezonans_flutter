@@ -62,7 +62,7 @@ class _StatusCardState extends State<StatusCard> with SingleTickerProviderStateM
             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Text(widget.kp.toStringAsFixed(2),
                   style: AppText.mono(size: 20, weight: FontWeight.w800, color: d.color)),
-              Text('Kp',
+              Text('Genlik',
                   style: AppText.sans(size: 9, weight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 0.5)),
             ]),
           ),
