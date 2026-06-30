@@ -132,14 +132,6 @@ class _MainScreenState extends State<MainScreen> {
                             text: getKpSpiritualDetails(activeKp).desc,
                           ),
                           const SizedBox(height: 15),
-                          StatusCard(
-                              kp: activeKp,
-                              updatedLabel: data != null ? formatTime(data!.updatedAt) : '--:--'),
-                          const SizedBox(height: 15),
-                          Spectrogram(history: history),
-                          const SizedBox(height: 15),
-                          TrendChart(history: history),
-                          const SizedBox(height: 15),
                           Simulator(
                             simulating: simulating,
                             value: simKp,
@@ -152,6 +144,14 @@ class _MainScreenState extends State<MainScreen> {
                               simKp = 0;
                             }),
                           ),
+                          const SizedBox(height: 15),
+                          StatusCard(
+                              kp: activeKp,
+                              updatedLabel: data != null ? formatTime(data!.updatedAt) : '--:--'),
+                          const SizedBox(height: 15),
+                          Spectrogram(history: history),
+                          const SizedBox(height: 15),
+                          TrendChart(history: history),
                           const SizedBox(height: 15),
                           NotificationCard(
                             isPremium: isPremium,
