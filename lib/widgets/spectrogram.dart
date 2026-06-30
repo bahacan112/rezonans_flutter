@@ -161,8 +161,6 @@ class _SpecPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final now = DateTime.now();
-
     // 1. Draw Space Background Gradient
     final bgPaint = Paint()
       ..shader = const LinearGradient(
@@ -200,7 +198,7 @@ class _SpecPainter extends CustomPainter {
 
       // Interpolate Kp and time
       final double kp = leftPoint.kp + (rightPoint.kp - leftPoint.kp) * t;
-      final bool forecast = leftPoint.time.isAfter(now);
+      final bool forecast = leftPoint.predicted;
 
       final double x = exactIndex * colW;
 

@@ -23,7 +23,6 @@ class _TrendChartState extends State<TrendChart> {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
     return _card(
       title: 'Jeomanyetik Kp Eğilimi (Son 72 Saat)',
       sub: 'Ölçülen ve tahmin edilen jeomanyetik fırtına değerleri',
@@ -55,7 +54,7 @@ class _TrendChartState extends State<TrendChart> {
                         alignment: Alignment.bottomCenter,
                         child: FractionallySizedBox(
                           heightFactor: (h.kp / 9).clamp(0.1, 1.0),
-                          child: _bar(h, h.time.isAfter(now)),
+                          child: _bar(h, h.predicted),
                         ),
                       ),
                     ),
