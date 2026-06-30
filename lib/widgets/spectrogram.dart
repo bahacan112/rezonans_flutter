@@ -140,11 +140,11 @@ class _SpecPainter extends CustomPainter {
   Color _getSpectrogramColor(double kp) {
     final t = (kp / 9.0).clamp(0.0, 1.0);
     if (t < 0.15) {
-      // Very Quiet: Dark Space Blue/Cyan gradient
-      return Color.lerp(const Color(0xFF00081A), const Color(0xFF002266), t / 0.15)!;
+      // Very Quiet: Nice glowing deep blue to cyan/teal
+      return Color.lerp(const Color(0xFF001255), const Color(0xFF0091EA), t / 0.15)!;
     } else if (t < 0.35) {
-      // Quiet to Active: Blue to Green
-      return Color.lerp(const Color(0xFF002266), const Color(0xFF00E676), (t - 0.15) / 0.20)!;
+      // Quiet to Active: Cyan/Teal to bright Green
+      return Color.lerp(const Color(0xFF0091EA), const Color(0xFF00E676), (t - 0.15) / 0.20)!;
     } else if (t < 0.55) {
       // Active to Moderate: Green to Yellow-Orange
       return Color.lerp(const Color(0xFF00E676), const Color(0xFFFFD600), (t - 0.35) / 0.20)!;
@@ -218,11 +218,13 @@ class _SpecPainter extends CustomPainter {
         final double bandKp = kp * decay;
         
         // Determine intensity and color based on the decayed Kp value for this specific band
-        final double bandIntensity = (bandKp / 9.0 + 0.15).clamp(0.0, 1.0);
+        // Ensure a solid base intensity (0.3 minimum) representing background Schumann resonance activity
+        final double bandIntensity = (0.3 + (bandKp / 9.0) * 0.7).clamp(0.0, 1.0);
         final Color baseColor = _getSpectrogramColor(bandKp);
 
         // Define a smooth vertical glow height based on Kp intensity for this specific band
-        final double blobHeight = 8.0 + (bandKp * 1.8);
+        // Increased base height (14.0 minimum) and factor to make the continuous horizontal waves visually apparent
+        final double blobHeight = 14.0 + (bandKp * 2.5);
         final rect = Rect.fromLTRB(
           x,
           yc - (blobHeight / 2),
