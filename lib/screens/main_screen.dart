@@ -29,6 +29,7 @@ class _MainScreenState extends State<MainScreen> {
   int unread = 0;
   List<NotificationItem> notifications = [];
   Timer? _timer;
+  HistoryPoint? selectedPoint;
 
   @override
   void initState() {
@@ -54,6 +55,16 @@ class _MainScreenState extends State<MainScreen> {
     if (mounted) setState(() {
       data = d;
       loading = false;
+      if (d.history.isNotEmpty) {
+        HistoryPoint? latest;
+        for (int i = d.history.length - 1; i >= 0; i--) {
+          if (!d.history[i].predicted) {
+            latest = d.history[i];
+            break;
+          }
+        }
+        selectedPoint = latest ?? d.history.first;
+      }
     });
   }
 
@@ -87,7 +98,19 @@ class _MainScreenState extends State<MainScreen> {
     if (t != null) api.setPrefs(t, next).catchError((_) => next);
   }
 
-  double get activeKp => simulating ? simKp : (data?.currentKp ?? 0);
+  String _formatSelectedPointTime(HistoryPoint? p) {
+    if (p == null) return '--:--';
+    final start = p.time;
+    final end = start.add(const Duration(hours: 3));
+    const days = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
+    final sd = days[start.weekday % 7], ed = days[end.weekday % 7];
+    final sh = start.hour.toString().padLeft(2, '0');
+    final eh = end.hour.toString().padLeft(2, '0');
+    final suffix = p.predicted ? ' (Tahmin)' : ' (Ölçüm)';
+    return sd != ed ? 'Zaman: $sd $sh:00 - $ed $eh:00$suffix' : 'Zaman: $sd $sh:00 - $eh:00$suffix';
+  }
+
+  double get activeKp => simulating ? simKp : (selectedPoint?.kp ?? data?.currentKp ?? 0.0);
 
   List<HistoryPoint> get history {
     final base = data?.history ?? [];
@@ -145,13 +168,23 @@ class _MainScreenState extends State<MainScreen> {
                             }),
                           ),
                           const SizedBox(height: 15),
-                          StatusCard(
+                           StatusCard(
                               kp: activeKp,
-                              updatedLabel: data != null ? formatTime(data!.updatedAt) : '--:--'),
+                              updatedLabel: simulating
+                                  ? 'Simülasyon Aktif'
+                                  : _formatSelectedPointTime(selectedPoint)),
                           const SizedBox(height: 15),
-                          Spectrogram(history: history),
+                          Spectrogram(
+                            history: history,
+                            selectedPoint: selectedPoint,
+                            onSelected: (p) => setState(() => selectedPoint = p),
+                          ),
                           const SizedBox(height: 15),
-                          TrendChart(history: history),
+                          TrendChart(
+                            history: history,
+                            selectedPoint: selectedPoint,
+                            onSelected: (p) => setState(() => selectedPoint = p),
+                          ),
                           const SizedBox(height: 15),
                           NotificationCard(
                             isPremium: isPremium,

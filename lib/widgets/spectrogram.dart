@@ -4,7 +4,14 @@ import '../theme.dart';
 
 class Spectrogram extends StatefulWidget {
   final List<HistoryPoint> history;
-  const Spectrogram({super.key, required this.history});
+  final HistoryPoint? selectedPoint;
+  final ValueChanged<HistoryPoint> onSelected;
+  const Spectrogram({
+    super.key,
+    required this.history,
+    required this.selectedPoint,
+    required this.onSelected,
+  });
 
   @override
   State<Spectrogram> createState() => _SpectrogramState();
@@ -16,16 +23,6 @@ const _labelYFactors = [0.05, 0.23, 0.41, 0.59, 0.77, 0.95];
 const _bandYFactors = [0.07, 0.226, 0.367, 0.507, 0.644, 0.779]; // Geomagnetic noise + 5 Schumann resonances
 
 class _SpectrogramState extends State<Spectrogram> {
-  HistoryPoint? hover;
-
-  HistoryPoint? get _latestMeasurement {
-    for (int i = widget.history.length - 1; i >= 0; i--) {
-      if (!widget.history[i].predicted) {
-        return widget.history[i];
-      }
-    }
-    return widget.history.isNotEmpty ? widget.history.first : null;
-  }
 
   String _range(DateTime start) {
     final end = start.add(const Duration(hours: 3));
@@ -41,7 +38,7 @@ class _SpectrogramState extends State<Spectrogram> {
     const double colW = 16.0; // Narrower columns for higher horizontal resolution
     const double h = 150.0;
     final double totalWidth = widget.history.length * colW;
-    final activePoint = hover ?? _latestMeasurement;
+    final activePoint = widget.selectedPoint;
 
     return Container(
       decoration: BoxDecoration(
@@ -120,7 +117,7 @@ class _SpectrogramState extends State<Spectrogram> {
                         onTapDown: (e) {
                           final i = (e.localPosition.dx / colW).floor();
                           if (i >= 0 && i < widget.history.length) {
-                            setState(() => hover = widget.history[i]);
+                            widget.onSelected(widget.history[i]);
                           }
                         },
                         child: CustomPaint(

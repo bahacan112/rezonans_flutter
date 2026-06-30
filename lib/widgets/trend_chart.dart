@@ -4,22 +4,19 @@ import '../theme.dart';
 
 class TrendChart extends StatefulWidget {
   final List<HistoryPoint> history;
-  const TrendChart({super.key, required this.history});
+  final HistoryPoint? selectedPoint;
+  final ValueChanged<HistoryPoint> onSelected;
+  const TrendChart({
+    super.key,
+    required this.history,
+    required this.selectedPoint,
+    required this.onSelected,
+  });
   @override
   State<TrendChart> createState() => _TrendChartState();
 }
 
 class _TrendChartState extends State<TrendChart> {
-  HistoryPoint? hover;
-
-  HistoryPoint? get _latestMeasurement {
-    for (int i = widget.history.length - 1; i >= 0; i--) {
-      if (!widget.history[i].predicted) {
-        return widget.history[i];
-      }
-    }
-    return widget.history.isNotEmpty ? widget.history.first : null;
-  }
 
   String _range(DateTime start) {
     final end = start.add(const Duration(hours: 3));
@@ -32,7 +29,7 @@ class _TrendChartState extends State<TrendChart> {
 
   @override
   Widget build(BuildContext context) {
-    final activePoint = hover ?? _latestMeasurement;
+    final activePoint = widget.selectedPoint;
     return _card(
       title: 'Jeomanyetik Kp Eğilimi (Son 72 Saat)',
       sub: 'Ölçülen ve tahmin edilen jeomanyetik fırtına değerleri',
@@ -57,7 +54,7 @@ class _TrendChartState extends State<TrendChart> {
               for (final h in widget.history)
                 Expanded(
                   child: GestureDetector(
-                    onTapDown: (_) => setState(() => hover = h),
+                    onTapDown: (_) => widget.onSelected(h),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 1),
                       child: Align(
