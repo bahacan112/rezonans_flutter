@@ -5,24 +5,87 @@ import '../theme.dart';
 class Spectrogram extends StatefulWidget {
   final List<HistoryPoint> history;
   const Spectrogram({super.key, required this.history});
+
   @override
   State<Spectrogram> createState() => _SpectrogramState();
 }
 
-const _hzLabels = ['32 Hz', '26 Hz', '20 Hz', '14 Hz', '7.8 Hz'];
-const _colW = 34.0;
-const _h = 135.0;
-
 class _SpectrogramState extends State<Spectrogram> {
-  HistoryPoint? hover;
+  late String _imageUrl;
+  bool _loading = true;
+  bool _error = false;
+  int _refreshCounter = 0;
 
-  String _range(DateTime start) {
-    final end = start.add(const Duration(hours: 3));
-    const days = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
-    final sd = days[start.weekday % 7], ed = days[end.weekday % 7];
-    final sh = start.hour.toString().padLeft(2, '0');
-    final eh = end.hour.toString().padLeft(2, '0');
-    return sd != ed ? '$sd $sh:00 - $ed $eh:00' : '$sd $sh:00 - $eh:00';
+  @override
+  void initState() {
+    super.initState();
+    _updateUrl();
+  }
+
+  void _updateUrl() {
+    setState(() {
+      _loading = true;
+      _error = false;
+      // Append a timestamp to bypass network/CDN caches and get the fresh image
+      _imageUrl = 'http://sos70.tsu.ru/new/shm.png?t=${DateTime.now().millisecondsSinceEpoch}_$_refreshCounter';
+    });
+  }
+
+  void _forceRefresh() {
+    _refreshCounter++;
+    _updateUrl();
+  }
+
+  void _openFullscreen(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(
+            backgroundColor: Colors.black,
+            title: Text(
+              'Schumann Spektrogramı (SOS70)',
+              style: AppText.sans(size: 14, weight: FontWeight.w700, color: AppColors.primaryGold),
+            ),
+            iconTheme: const IconThemeData(color: AppColors.primaryGold),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _forceRefresh();
+                },
+              ),
+            ],
+          ),
+          body: Center(
+            child: InteractiveViewer(
+              minScale: 0.5,
+              maxScale: 4.0,
+              child: Image.network(
+                _imageUrl,
+                fit: BoxFit.contain,
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) return child;
+                  return const Center(
+                    child: CircularProgressIndicator(color: AppColors.primaryGold),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return Center(
+                    child: Text(
+                      'Resim yüklenemedi.\nLütfen internet bağlantınızı kontrol edin.',
+                      textAlign: TextAlign.center,
+                      style: AppText.sans(size: 12, color: Colors.white70),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -34,120 +97,151 @@ class _SpectrogramState extends State<Spectrogram> {
         border: Border.all(color: AppColors.borderLight),
       ),
       padding: const EdgeInsets.all(16),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text('Schumann Rezonans Spektrogramı', style: AppText.sans(size: 14, weight: FontWeight.w700)),
-        const SizedBox(height: 2),
-        Text('Atmosferik boşlukta rezonans frekanslarının uyarılma şiddeti',
-            style: AppText.sans(size: 10, color: AppColors.textMuted)),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 24,
-          child: Center(
-            child: hover == null
-                ? Text('Detayları görmek için dalgaların üzerine dokunun',
-                    style: AppText.sans(size: 9, color: AppColors.textMuted))
-                : Text(
-                    'Zaman: ${_range(hover!.time)} | Kp: ${hover!.kp.toStringAsFixed(2)} | ${getKpSpiritualDetails(hover!.kp).label}',
-                    style: AppText.sans(size: 9, color: getKpSpiritualDetails(hover!.kp).color)),
-          ),
-        ),
-        const SizedBox(height: 8),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            height: _h,
-            color: AppColors.bgSpace,
-            child: Row(children: [
-              Container(
-                width: 44,
-                color: const Color(0xFF06060C),
-                padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    for (final l in _hzLabels)
-                      Text(l, style: AppText.mono(size: 8, weight: FontWeight.w700, color: AppColors.primaryGold)),
+                    Text(
+                      'Schumann Rezonans Spektrogramı',
+                      style: AppText.sans(size: 14, weight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Atmosferik boşlukta rezonans frekanslarının uyarılma şiddeti',
+                      style: AppText.sans(size: 10, color: AppColors.textMuted),
+                    ),
                   ],
                 ),
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: GestureDetector(
-                    onTapDown: (e) {
-                      final i = (e.localPosition.dx / _colW).floor();
-                      if (i >= 0 && i < widget.history.length) {
-                        setState(() => hover = widget.history[i]);
-                      }
-                    },
-                    child: CustomPaint(
-                      size: Size(widget.history.length * _colW, _h),
-                      painter: _SpecPainter(widget.history, hover),
+              IconButton(
+                icon: const Icon(Icons.refresh, color: AppColors.primaryGold, size: 20),
+                onPressed: _forceRefresh,
+                tooltip: 'Grafiği Yenile',
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          GestureDetector(
+            onTap: () => _openFullscreen(context),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                height: 160,
+                width: double.infinity,
+                color: const Color(0xFF07070F),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Image.network(
+                      _imageUrl,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) {
+                          // Image loaded successfully
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (mounted && _loading) {
+                              setState(() => _loading = false);
+                            }
+                          });
+                          return child;
+                        }
+                        return const Center(
+                          child: CircularProgressIndicator(color: AppColors.primaryGold),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (mounted && !_error) {
+                            setState(() {
+                              _error = true;
+                              _loading = false;
+                            });
+                          }
+                        });
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.broken_image, color: Colors.white24, size: 32),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Gözlem verisi şu an alınamıyor.\n(Tomsk İstasyonu sunucusu yanıt vermiyor olabilir)',
+                                  textAlign: TextAlign.center,
+                                  style: AppText.sans(size: 10, color: AppColors.textMuted),
+                                ),
+                                const SizedBox(height: 8),
+                                ElevatedButton.icon(
+                                  onPressed: _forceRefresh,
+                                  icon: const Icon(Icons.replay, size: 14),
+                                  label: const Text('Tekrar Dene'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primaryGold.withValues(alpha: 0.15),
+                                    foregroundColor: AppColors.primaryGold,
+                                    textStyle: AppText.sans(size: 10, weight: FontWeight.w700),
+                                    side: const BorderSide(color: AppColors.borderGold),
+                                    elevation: 0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  ),
+                    if (!_loading && !_error)
+                      Positioned(
+                        right: 8,
+                        bottom: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.zoom_in, color: AppColors.primaryGold, size: 12),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Büyütmek için dokunun',
+                                style: AppText.sans(size: 8, color: Colors.white70),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
-            ]),
+            ),
           ),
-        ),
-      ]),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Kaynak: Tomsk State University (SOS70)',
+                style: AppText.sans(size: 9, color: AppColors.textMuted).copyWith(fontStyle: FontStyle.italic),
+              ),
+              Text(
+                'Güncelleme: ${formatTime(DateTime.now())}',
+                style: AppText.sans(size: 9, color: AppColors.textMuted),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
-}
-
-class _SpecPainter extends CustomPainter {
-  final List<HistoryPoint> history;
-  final HistoryPoint? hover;
-  _SpecPainter(this.history, this.hover);
-
-  // (yPct, alpha) per band, top->bottom
-  static const _bands = [
-    [0.12, 0.12], [0.32, 0.22], [0.52, 0.38], [0.72, 0.62], [0.9, 0.95],
-  ];
-
-  Color _rgb(double kp) {
-    if (kp < 3) return const Color(0xFF10B981);
-    if (kp < 4) return const Color(0xFFF59E0B);
-    if (kp < 5) return const Color(0xFFF97316);
-    if (kp < 8) return const Color(0xFFEF4444);
-    return const Color(0xFF00E5FF);
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Offset.zero & size, Paint()..color = AppColors.bgSpace);
-    final now = DateTime.now();
-    final p = Paint();
-    for (int i = 0; i < history.length; i++) {
-      final h = history[i];
-      final x = i * _colW;
-      final forecast = h.time.isAfter(now);
-      final dim = forecast ? 0.35 : 1.0;
-      final intensity = (h.kp / 9 + 0.15).clamp(0.0, 1.0);
-      final base = _rgb(h.kp);
-      for (final b in _bands) {
-        final yc = b[0] * size.height;
-        p.color = base.withValues(alpha: b[1] * dim * intensity);
-        canvas.drawRRect(
-          RRect.fromRectAndRadius(
-            Rect.fromLTWH(x + 1, yc - 8, _colW - 2, 16),
-            const Radius.circular(3),
-          ),
-          p,
-        );
-      }
-      if (hover != null && hover!.time == h.time) {
-        canvas.drawRect(
-          Rect.fromLTWH(x, 0, _colW, size.height),
-          Paint()
-            ..color = Colors.white.withValues(alpha: 0.06)
-            ..style = PaintingStyle.fill,
-        );
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _SpecPainter old) => old.hover != hover || old.history != history;
 }
