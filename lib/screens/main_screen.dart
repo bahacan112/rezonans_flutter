@@ -124,13 +124,13 @@ class _MainScreenState extends State<MainScreen> {
                       child: ListView(
                         padding: const EdgeInsets.all(15),
                         children: [
+                          _accountCard(user),
+                          const SizedBox(height: 15),
                           AnalysisCard(
                             title: 'Schumann Kozmik Enerji Analizi',
                             spiritual: getKpSpiritualDetails(activeKp).spiritual,
                             text: getKpSpiritualDetails(activeKp).desc,
                           ),
-                          const SizedBox(height: 15),
-                          _accountCard(user),
                           const SizedBox(height: 15),
                           StatusCard(
                               kp: activeKp,
