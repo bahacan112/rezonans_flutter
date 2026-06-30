@@ -62,7 +62,7 @@ class _SpectrogramState extends State<Spectrogram> {
                       style: AppText.sans(size: 9, color: AppColors.textMuted),
                     )
                   : Text(
-                      'Zaman: ${_range(hover!.time)} | Kp: ${hover!.kp.toStringAsFixed(2)} | ${getKpSpiritualDetails(hover!.kp).label}',
+                      'Zaman: ${_range(hover!.time)}${hover!.predicted ? ' (Tahmin)' : ' (Ölçüm)'} | Kp: ${hover!.kp.toStringAsFixed(2)} | ${getKpSpiritualDetails(hover!.kp).label}',
                       style: AppText.sans(size: 9, color: getKpSpiritualDetails(hover!.kp).color),
                     ),
             ),
@@ -269,6 +269,46 @@ class _SpecPainter extends CustomPainter {
           ).createShader(burstRect);
         canvas.drawRect(burstRect, burstPaint);
       }
+    }
+
+    // Find the boundary between past (finalized) and future (forecast) data
+    double? nowX;
+    for (int i = 0; i < history.length; i++) {
+      if (history[i].predicted) {
+        nowX = i * colW;
+        break;
+      }
+    }
+
+    // Draw "Now" (Şimdi) vertical boundary line separating measurement from forecast
+    if (nowX != null && nowX > 0 && nowX < size.width) {
+      final nowPaint = Paint()
+        ..color = AppColors.primaryGold.withValues(alpha: 0.55)
+        ..strokeWidth = 1.0
+        ..style = PaintingStyle.stroke;
+      
+      double y = 0;
+      const dashH = 4.0;
+      const spaceH = 4.0;
+      while (y < size.height) {
+        canvas.drawLine(Offset(nowX, y), Offset(nowX, y + dashH), nowPaint);
+        y += dashH + spaceH;
+      }
+      
+      final textPainter = TextPainter(
+        text: const TextSpan(
+          text: 'ŞİMDİ',
+          style: TextStyle(
+            fontSize: 7,
+            fontWeight: FontWeight.bold,
+            color: AppColors.primaryGold,
+            letterSpacing: 0.5,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(nowX - textPainter.width / 2, size.height - 11));
     }
 
     // 5. Draw Hover Indicator Overlay (Thin high-tech cursor line with dots)
