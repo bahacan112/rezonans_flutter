@@ -154,7 +154,7 @@ class _AuthScreenState extends State<AuthScreen> {
           shape: BoxShape.circle,
           border: Border.all(color: AppColors.primaryGold, width: 1.5),
         ),
-        child: ClipOval(child: Image.asset('assets/icon.jpg', fit: BoxFit.cover)),
+        child: ClipOval(child: Image.asset('assets/schuman-logo.png', fit: BoxFit.cover)),
       );
 
   Widget _card() => Container(
