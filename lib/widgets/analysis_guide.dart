@@ -48,7 +48,7 @@ const _guide = [
   ],
   [
     'Tomsk (SOS70) Grafiği ile Neden Farklar Var?',
-    'Tomsk Rasathanesi (SOS70) sadece Rusya\'nın Tomsk bölgesi üzerindeki yerel elektromanyetik hareketleri ölçer. O bölgedeki yerel bir şimşek fırtınası Tomsk grafiğinde devasa beyaz bir sütun oluşturabilir ancak bu küresel bir etki değildir. Uygulamamız ise tüm dünyayı sarsan küresel jeomanyetik fırtınaları (NOAA) temel alır. Dolayısıyla yerel şimşek anlarında Tomsk ile farklar oluşması fiziksel ve bilimsel açıdan tamamen normaldir.'
+    'Tomsk Rasathanesi (SOS70) kendi bilgilendirme sayfasında da kibarca belirttiği üzere, bu ölçümler yerel antenlerle Rusya\'nın Tomsk bölgesi üzerindeki yerel elektromanyetik hareketleri izler. O bölgedeki yerel bir şimşek fırtınası Tomsk grafiğinde devasa beyaz bir sütun oluşturabilir ancak bu küresel bir etki değildir. Uygulamamız ise tüm dünyayı sarsan küresel jeomanyetik fırtınaları (NOAA) temel alır. Dolayısıyla yerel şimşek anlarında Tomsk ile farklar oluşması fiziksel ve bilimsel açıdan tamamen normaldir.'
   ],
 ];
 
