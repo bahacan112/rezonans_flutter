@@ -205,21 +205,28 @@ class _SpecPainter extends CustomPainter {
       // Skip painting lines off canvas
       if (x < 0 || x > size.width) continue;
 
-      // Determine intensity and color based on the interpolated Kp value
-      final double intensity = (kp / 9.0 + 0.1).clamp(0.0, 1.0);
-      final Color baseColor = _getSpectrogramColor(kp);
-      final double opacityDim = forecast ? 0.35 : 1.0;
-
       // Draw the spectrogram data as overlapping vertical gradient blobs for each frequency band
-      for (final yFactor in _bandYFactors) {
+      // Schumann resonance amplitudes decay as frequency increases (7.8Hz is strongest, 32Hz is weakest)
+      const bandIntensityFactors = [1.0, 0.70, 0.45, 0.28, 0.15];
+      final double opacityDim = forecast ? 0.35 : 1.0;
+      
+      for (int j = 0; j < _bandYFactors.length; j++) {
+        final double yFactor = _bandYFactors[j];
         final double yc = yFactor * size.height;
         
-        // Define a smooth vertical glow height based on Kp intensity
-        final double blobHeight = 12.0 + (kp * 1.5);
+        final double decay = bandIntensityFactors[j];
+        final double bandKp = kp * decay;
+        
+        // Determine intensity and color based on the decayed Kp value for this specific band
+        final double bandIntensity = (bandKp / 9.0 + 0.15).clamp(0.0, 1.0);
+        final Color baseColor = _getSpectrogramColor(bandKp);
+
+        // Define a smooth vertical glow height based on Kp intensity for this specific band
+        final double blobHeight = 8.0 + (bandKp * 1.8);
         final rect = Rect.fromLTRB(
           x,
           yc - (blobHeight / 2),
-          x + stepWidth + 0.5, // 0.5 overlap prevents pixel gaps
+          x + stepWidth + 0.5,
           yc + (blobHeight / 2),
         );
 
@@ -229,7 +236,7 @@ class _SpecPainter extends CustomPainter {
             end: Alignment.bottomCenter,
             colors: [
               baseColor.withValues(alpha: 0.0),
-              baseColor.withValues(alpha: 0.85 * opacityDim * intensity),
+              baseColor.withValues(alpha: 0.85 * opacityDim * bandIntensity),
               baseColor.withValues(alpha: 0.0),
             ],
           ).createShader(rect);
