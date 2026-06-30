@@ -75,22 +75,8 @@ SchumannData _mockData() {
   final history = <HistoryPoint>[];
   for (int idx = 0; idx < 24; idx++) {
     final t = now.add(Duration(hours: (idx - 15) * 3));
-    double kp = 1.3 + sin(idx * 0.7) * 0.5;
-    
-    // Exact SOS70 screenshot pattern replication:
-    // 1. June 28 morning burst (indices around 2-4)
-    if (idx >= 2 && idx <= 4) {
-      kp = 4.2;
-    }
-    // 2. June 29 afternoon burst (indices around 10-12)
-    if (idx >= 10 && idx <= 12) {
-      kp = 5.8;
-    }
-    // 3. June 30 massive storm (indices around 14-17)
-    if (idx >= 14 && idx <= 17) {
-      kp = 8.3; // Trigger the massive vertical white burst!
-    }
-    
+    // Generate a calm, realistic quiet baseline (values around 0.6 - 1.4)
+    double kp = 1.0 + sin(idx * 0.5) * 0.4;
     kp = kp.clamp(0.2, 9.0);
     
     // Future forecast points (after index 15)
