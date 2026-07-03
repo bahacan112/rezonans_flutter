@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "346668839168",
+    "project_id": "schumann-rezonansi",
+    "storage_bucket": "schumann-rezonansi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346668839168:android:0b3bb80323523e5f1303e5",
+        "android_client_info": {
+          "package_name": "com.rezonans.schumann"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAZVydfgKkYuxB9zToi3-mgfF9DPG7Ua8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
