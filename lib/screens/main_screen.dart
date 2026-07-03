@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../api/client.dart';
 import '../api/noaa.dart';
+import '../api/notification_service.dart';
 import '../auth/auth_provider.dart';
 import '../models/kp.dart';
 import '../theme.dart';
@@ -39,6 +40,10 @@ class _MainScreenState extends State<MainScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadNotifications();
       _loadPrefs();
+      final t = _token;
+      if (t != null) {
+        NotificationService.requestPermissionsAndRegister(t);
+      }
     });
   }
 
