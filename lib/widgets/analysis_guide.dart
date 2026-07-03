@@ -52,7 +52,11 @@ const _guide = [
   ],
   [
     'Tahmin ile Gerçekleşen Ölçüm Neden Farklı Olabilir?',
-    'Uzay havası tahminleri, güneş fırtınasının yola çıktığını ve Dünya\'ya ulaşacağını önceden haber verir (Tahmin). Ancak fırtına Dünya manyetik alanına fiilen çarpana kadar geçmiş saatlerdeki ölçümler sakin (yeşil/düşük) görünmeye devam eder. Dalga Dünya\'ya ulaştığı andan itibaren ölçümler de yükselir. Bu fark, fırtınanın henüz Dünya\'ya ulaşmadığını veya yolda olduğunu gösterir.'
+    'Uzay havası tahminleri, güneş fırtınasının yola çıktığını ve Dünya\'ya ulaşacağını önceden modeller (Tahmin). Ancak şu sebeplerle gerçek ölçüm daha düşük kalabilir:\n\n'
+        '• Zamanlama Gecikmesi: Fırtınanın hızı yavaşlayabilir ve tahmin edilenden saatler sonra ulaşabilir. Bu süreçte geçmiş ölçümler sakin kalmaya devam eder.\n'
+        '• Manyetik Kutuplanma (Bz): Fırtınanın manyetik alanı Dünya\'nın kalkanıyla aynı yöndeyse (Kuzey Bz+) kalkanımız fırtınayı engeller ve dalgalanma ölçülmez.\n'
+        '• Rota Sapması (Teğet Geçme): Fırtına uzayda yön değiştirip Dünya\'yı sıyırıp geçebilir.\n'
+        '• Küresel Ortalama: Kp indeksi küresel bir ortalamadır; fırtına lokal kalsa da küresel etki zayıf kalabilir.'
   ],
 ];
 
