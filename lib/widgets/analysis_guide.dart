@@ -48,8 +48,9 @@ const _guide = [
     'Dünya\'nın manyetik rezonansı ile insan beyninin Alfa dalgaları, sinir sistemi ve hücresel ritimler doğrudan uyumludur. Genlik değerlerinin yükseldiği uyanış pencerelerinde, beden yüksek kozmik frekansları entegre ederken hafif baş ağrısı, rüyalarda berraklık veya uykusuzluk hissedilebilir. Bu dönemler derin meditasyon ve DNA aktivasyonu çalışmaları için en yüksek potansiyele sahiptir.'
   ],
   [
-    'Tomsk (SOS70) Grafiği ile Neden Farklar Var?',
-    'Tomsk Rasathanesi (SOS70) kendi bilgilendirme sayfasında da belirttiği üzere, "grafiklerdeki dikey beyaz sütunlar genellikle yerel yıldırım deşarjlarından (lokal şimşek fırtınaları) ve bölgesel gürültülerden kaynaklanır." Uygulamamız ise tüm dünyayı sarsan küresel jeomanyetik fırtınaları (NOAA) temel aldığından, yerel şimşek anlarında Tomsk ile farklar oluşması fiziksel ve bilimsel açıdan tamamen normaldir. Ayrıca Tomsk web sitesi sadece Rusya/Tomsk saatini (UTC+7) kullanırken, uygulamamız tüm verileri otomatik olarak kullanıcının bulunduğu ülkenin kendi yerel saat dilimine çevirir. Örneğin, Tomsk grafiğinde saat 16:00\'da gördüğünüz ortak bir dalgalanma, Türkiye\'deki (UTC+3) bir kullanıcıda tam olarak saat 12:00\'de, Almanya\'daki (UTC+2) bir kullanıcıda ise saat 11:00\'de görünür.'
+    'Tomsk (SOS70) ve Diğer Kaynaklar (GCI, Cumana vb.) ile Neden Farklar Var?',
+    'Tomsk (SOS70), Cumana (İtalya) veya GCI (Global Coherence Initiative) gibi gözlemevleri, kendi yerel bölgelerindeki elektromanyetik sinyalleri ve yıldırım deşarjlarını ölçer. Bu rasathanelerin kendi sitelerinde de belirttikleri üzere, grafiklerdeki ani dikey yükselmeler genellikle bölgesel gürültülerden ve yerel şimşek fırtınalarından kaynaklanır.\n\n'
+        'Uygulamamız ise tüm dünyayı etkileyen küresel jeomanyetik fırtınaları (NOAA verilerini) temel aldığı için, yerel ölçüm yapan istasyonlar ile aralarında farklar oluşması fiziksel ve bilimsel açıdan tamamen normaldir. Ayrıca bu siteler genellikle kendi yerel saat dilimlerini (örneğin Tomsk UTC+7) kullanırken, uygulamamız tüm verileri otomatik olarak kendi yerel saat diliminize çevirir.'
   ],
   [
     'Tahmin ile Gerçekleşen Ölçüm Neden Farklı Olabilir?',
