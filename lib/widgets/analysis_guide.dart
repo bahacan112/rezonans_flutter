@@ -72,6 +72,26 @@ const _guide = [
     'Manyetik Alan Dalgalanmaları ve Kritik "Bz" Parametresi Nedir?',
     'Dünya\'nın manyetik alanı bizi güneş fırtınalarından koruyan koruyucu bir kalkandır. Güneş rüzgarı ile gelen manyetik alanın dikey yönüne Bz parametresi denir. Bu yön kuzeye doğru (Bz+) olduğunda, Dünya\'nın kalkanı ile aynı yönde olduğu için fırtına püskürtülür ve yer yüzünde neredeyse hiçbir hareketlilik (Kp) ölçülmez. Ancak Bz yönü güneye doğru (Bz-) döndüğünde, Dünya\'nın manyetik alanı ile zıt yönlü olarak "manyetik yeniden birleşme" yaşanır; kalkanımız aralanır, güneş enerjisi içeri sızar ve güçlü jeomanyetik fırtınalar tetiklenir.'
   ],
+  [
+    'Güneş Patlaması Sınıfları Nedir? (X, M, C Sınıfı Patlamalar Ne Anlama Gelir?)',
+    'Güneş patlamaları, yaydıkları X-ışını yoğunluğuna göre harflerle sınıflandırılır: A, B, C, M ve X. Her harf bir öncekinin 10 katı gücü temsil eder:\n\n'
+        '• X-Sınıfı (En Şiddetli): Dünya genelinde büyük radyo kesintilerine ve uzun süreli jeomanyetik fırtınalara yol açabilir.\n'
+        '• M-Sınıfı (Orta Şiddetli): Kutup bölgelerinde kısa radyo kesintilerine ve küçük-orta jeomanyetik fırtınalara neden olabilir.\n'
+        '• C-Sınıfı (Zayıf): Dünya üzerinde neredeyse hiç fark edilebilir bir etki yaratmaz.'
+  ],
+  [
+    'Kp İndeksine Göre Fırtına Seviyeleri (G1 - G5 Skalası) Nelerdir?',
+    'NOAA, jeomanyetik fırtınaların şiddetini Kp değerlerine göre G1\'den G5\'e kadar sınıflandırır:\n\n'
+        '• Kp = 5: G1 (Küçük Fırtına) - Güç şebekelerinde hafif dalgalanmalar, kutup ışıkları (aurora) oluşumu.\n'
+        '• Kp = 6: G2 (Orta Fırtına) - Yüksek enlem güç sistemlerinde voltaj alarmları, uydularda yön düzeltmeleri.\n'
+        '• Kp = 7: G3 (Güçlü Fırtına) - Uydu navigasyonlarında ve düşük frekanslı radyo sinyallerinde aksamalar.\n'
+        '• Kp = 8: G4 (Şiddetli Fırtına) - Güç kontrol sistemlerinde yaygın voltaj sorunları, orta enlemlerde kutup ışıkları.\n'
+        '• Kp = 9 ve üzeri: G5 (Ekstrem Fırtına) - Elektrik şebekelerinde çökmeler, uydularda kalıcı hasarlar ve yoğun auroralar.'
+  ],
+  [
+    'Güneş Lekeleri ve 11 Yıllık Solar Döngü Nedir?',
+    'Güneş\'in manyetik aktivitesi sabit değildir; yaklaşık 11 yıllık periyotlarla yükselir ve alçalır. Bu periyoda Solar Döngü denir. Döngünün zirve noktasına "Solar Maksimum" denir ve bu dönemde Güneş yüzeyinde yoğun manyetik alanların oluşturduğu koyu renkli Güneş Lekeleri (Sunspots) çoğalır. Bu lekeler, güneş patlamalarının ve fırtınalarının birincil kaynağıdır. Döngü boyunca lekeler arttıkça Dünya\'ya çarpan fırtına sayısı ve dolayısıyla Kp dalgalanmaları da en yüksek seviyeye ulaşır.'
+  ],
 ];
 
 class GuideAccordion extends StatefulWidget {
