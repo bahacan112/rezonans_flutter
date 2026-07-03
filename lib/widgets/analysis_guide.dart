@@ -60,6 +60,18 @@ const _guide = [
         '• Rota Sapması (Teğet Geçme): Fırtına uzayda yön değiştirip Dünya\'yı sıyırıp geçebilir.\n'
         '• Küresel Ortalama: Kp indeksi küresel bir ortalamadır; fırtına lokal kalsa da küresel etki zayıf kalabilir.'
   ],
+  [
+    'İyonosfer Katmanı ve Schumann Rezonansı İlişkisi Nedir?',
+    'İyonosfer, Dünya yüzeyinden yaklaşık 60 km ila 1000 km yükseklikte bulunan, güneş ışınları ve kozmik radyasyonla iyonize olmuş elektrik yüklü bir gaz (plazma) katmanıdır. Bu katman, elektrik iletkenliği sayesinde Dünya yüzeyi ile birlikte devasa bir doğal elektromanyetik "dalga kılavuzu" (waveguide) oluşturur. Şimşeklerin yarattığı elektromanyetik sinyaller bu kılavuzun tavanı (iyonosfer) ve tabanı (yer küre) arasında yansıyarak 7.83 Hz temel frekansındaki Schumann Rezonansını oluşturur. Güneş patlamaları iyonosferin yüksekliğini ve iletkenliğini değiştirerek rezonans dalgalarını doğrudan etkiler.'
+  ],
+  [
+    'Güneş Rüzgarı Hızları ve Etkileri Nelerdir?',
+    'Güneş rüzgarı, Güneş\'in korona katmanından uzaya yayılan yüklü parçacıkların (plazma) akışıdır. Normal zamanlarda güneş rüzgarı hızı yaklaşık 300 - 400 km/s (saniyede kilometre) civarındadır. Ancak Güneş\'te koronal delikler veya patlamalar (CME) meydana geldiğinde, bu hız 800 - 1000+ km/s değerlerine ulaşabilir. Güneş rüzgarının hızı ve parçacık yoğunluğu ne kadar yüksekse, Dünya\'nın manyetik alanına (manyetosfer) çarptığında oluşturduğu jeomanyetik fırtına (ve dolayısıyla uygulamadaki Kp değeri) o kadar şiddetli olur.'
+  ],
+  [
+    'Manyetik Alan Dalgalanmaları ve Kritik "Bz" Parametresi Nedir?',
+    'Dünya\'nın manyetik alanı bizi güneş fırtınalarından koruyan koruyucu bir kalkandır. Güneş rüzgarı ile gelen manyetik alanın dikey yönüne Bz parametresi denir. Bu yön kuzeye doğru (Bz+) olduğunda, Dünya\'nın kalkanı ile aynı yönde olduğu için fırtına püskürtülür ve yer yüzünde neredeyse hiçbir hareketlilik (Kp) ölçülmez. Ancak Bz yönü güneye doğru (Bz-) döndüğünde, Dünya\'nın manyetik alanı ile zıt yönlü olarak "manyetik yeniden birleşme" yaşanır; kalkanımız aralanır, güneş enerjisi içeri sızar ve güçlü jeomanyetik fırtınalar tetiklenir.'
+  ],
 ];
 
 class GuideAccordion extends StatefulWidget {
