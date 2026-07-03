@@ -36,7 +36,7 @@ class AnalysisCard extends StatelessWidget {
 const _guide = [
   [
     'Schumann Genlik Değeri Nedir?',
-    'Schumann Rezonans Spektrogramında dalgaların gücünü ve iyonosferdeki elektromanyetik uyarılma düzeyini gösteren bilimsel ölçüdür. Bu genlik değerleri, küresel jeomanyetik Kp hareketliliği ile doğrudan doğru orantılıdır; güneş patlamaları arttıkça genlik yükselir ve iyonosferde yoğun ışık kodları tetiklenir.'
+    'Schumann Rezonansı grafiğinde dalgaların gücünü ve iyonosferdeki elektromanyetik uyarılma düzeyini gösteren bilimsel ölçüdür. Bu genlik değerleri, küresel jeomanyetik Kp hareketliliği ile doğrudan doğru orantılıdır; güneş patlamaları arttıkça genlik yükselir ve iyonosferde yoğun ışık kodları tetiklenir.'
   ],
   [
     'Ölçüm (Ölçülen) ve Tahmin (Gelecek) Ayrımı Nedir?',

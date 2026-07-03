@@ -51,7 +51,7 @@ class _SpectrogramState extends State<Spectrogram> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Schumann Rezonans Spektrogramı',
+            'Schumann Rezonansı',
             style: AppText.sans(size: 18, weight: FontWeight.w700),
           ),
           const SizedBox(height: 2),
