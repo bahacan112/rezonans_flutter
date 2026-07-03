@@ -94,6 +94,81 @@ const _guide = [
   ],
 ];
 
+class GuideItemWidget extends StatefulWidget {
+  final String title;
+  final String content;
+  final bool isLast;
+
+  const GuideItemWidget({
+    super.key,
+    required this.title,
+    required this.content,
+    this.isLast = false,
+  });
+
+  @override
+  State<GuideItemWidget> createState() => _GuideItemWidgetState();
+}
+
+class _GuideItemWidgetState extends State<GuideItemWidget> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: () => setState(() => _isExpanded = !_isExpanded),
+          behavior: HitTestBehavior.opaque,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.title,
+                    style: AppText.sans(
+                      size: 15,
+                      weight: FontWeight.w700,
+                      color: AppColors.primaryGold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Icon(
+                  _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  color: _isExpanded ? AppColors.primaryGold : AppColors.textMuted,
+                  size: 20,
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (_isExpanded)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Text(
+              widget.content,
+              style: AppText.sans(
+                size: 14,
+                color: AppColors.textMuted,
+                height: 1.5,
+              ),
+            ),
+          ),
+        if (!widget.isLast)
+          const Divider(
+            color: AppColors.borderLight,
+            height: 1,
+            thickness: 1,
+          ),
+      ],
+    );
+  }
+}
+
 class GuideAccordion extends StatefulWidget {
   const GuideAccordion({super.key});
   @override
@@ -128,16 +203,16 @@ class _GuideAccordionState extends State<GuideAccordion> {
           ),
           if (open)
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  for (final g in _guide) ...[
-                    Text(g[0], style: AppText.sans(size: 15, weight: FontWeight.w700, color: AppColors.primaryGold)),
-                    const SizedBox(height: 4),
-                    Text(g[1], style: AppText.sans(size: 14, color: AppColors.textMuted, height: 1.5)),
-                    const SizedBox(height: 12),
-                  ],
+                  for (int i = 0; i < _guide.length; i++)
+                    GuideItemWidget(
+                      title: _guide[i][0],
+                      content: _guide[i][1],
+                      isLast: i == _guide.length - 1,
+                    ),
                 ],
               ),
             ),
