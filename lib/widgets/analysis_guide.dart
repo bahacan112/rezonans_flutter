@@ -35,8 +35,9 @@ class AnalysisCard extends StatelessWidget {
 
 const _guide = [
   [
-    'Schumann Genlik Değeri Nedir?',
-    'Schumann Rezonansı grafiğinde dalgaların gücünü ve iyonosferdeki elektromanyetik uyarılma düzeyini gösteren bilimsel ölçüdür. Bu genlik değerleri, küresel jeomanyetik Kp hareketliliği ile doğrudan doğru orantılıdır; güneş patlamaları arttıkça genlik yükselir ve iyonosferde yoğun ışık kodları tetiklenir.'
+    'Schumann Genlik Değeri Nedir? (Kp ve Genlik İlişkisi)',
+    'Uygulamamızda "Genlik" olarak basitleştirilen bu değer, aslında NOAA uydularından alınan küresel jeomanyetik Kp indeksidir. Teknik olarak Schumann Rezonansının gerçek genliği pikotesla (pT) cinsinden ölçülen elektromanyetik dalga gücüdür; Kp indeksi ise Dünya manyetik alanındaki dalgalanmaları (0-9 arası) ölçer.\n\n'
+        'Aralarındaki ilişki ise şudur: Güneş fırtınaları nedeniyle Kp indeksi yükseldiğinde, Dünya\'nın manyetik kalkanı dalgalanır ve bu yüklü parçacıklar Schumann dalgalarının yansıdığı "tavanı" (iyonosferi) bastırarak fiziksel rezonans genliğini ve frekansını doğrudan etkiler. Uygulamamızda kullanıcılara kolaylık sağlamak amacıyla, Dünya\'nın bu jeomanyetik uyarılma düzeyi "Schumann Genliği" olarak basitleştirilerek yansıtılmıştır.'
   ],
   [
     'Ölçüm (Ölçülen) ve Tahmin (Gelecek) Ayrımı Nedir?',
