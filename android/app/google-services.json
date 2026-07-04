@@ -1,21 +1,40 @@
 {
   "project_info": {
-    "project_number": "346668839168",
-    "project_id": "schumann-rezonansi",
-    "storage_bucket": "schumann-rezonansi.firebasestorage.app"
+    "project_number": "187114407101",
+    "project_id": "layers-rezonans",
+    "storage_bucket": "layers-rezonans.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:346668839168:android:0b3bb80323523e5f1303e5",
+        "mobilesdk_app_id": "1:187114407101:android:a926ff331f8726eadee3d4",
         "android_client_info": {
-          "package_name": "com.rezonans.schumann"
+          "package_name": "com.anonymous.rezonansmobile"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDAZVydfgKkYuxB9zToi3-mgfF9DPG7Ua8"
+          "current_key": "AIzaSyCQf9icimQzv4XCs693ktdVrhlN8gOnJKc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187114407101:android:a5604b110e2ab8dbdee3d4",
+        "android_client_info": {
+          "package_name": "tr.baha.rezonans_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQf9icimQzv4XCs693ktdVrhlN8gOnJKc"
         }
       ],
       "services": {
