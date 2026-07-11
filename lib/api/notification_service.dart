@@ -1,10 +1,9 @@
-import 'dart:developer' as dev;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'client.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  dev.log('Arka plan bildirimi alındı: ${message.messageId}');
+  print('Arka plan bildirimi alındı: ${message.messageId}');
 }
 
 class NotificationService {
@@ -16,11 +15,11 @@ class NotificationService {
 
     // Ön plan bildirim dinleyicileri
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      dev.log('Ön planda bildirim alındı: ${message.notification?.title}');
+      print('Ön planda bildirim alındı: ${message.notification?.title}');
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      dev.log('Bildirime tıklanarak uygulama açıldı: ${message.data}');
+      print('Bildirime tıklanarak uygulama açıldı: ${message.data}');
     });
   }
 
@@ -33,31 +32,31 @@ class NotificationService {
         sound: true,
       );
 
-      dev.log('Bildirim izin durumu: ${settings.authorizationStatus}');
+      print('Bildirim izin durumu: ${settings.authorizationStatus}');
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized ||
           settings.authorizationStatus == AuthorizationStatus.provisional) {
         // Token al
         final fcmToken = await _messaging.getToken();
         if (fcmToken != null) {
-          dev.log('FCM Token başarıyla alındı: $fcmToken');
+          print('FCM Token başarıyla alındı: $fcmToken');
           // Backend sunucusuna kaydet
           await api.registerPushToken(authToken, fcmToken);
-          dev.log('FCM Token backend sunucusuna başarıyla kaydedildi.');
+          print('FCM Token backend sunucusuna başarıyla kaydedildi.');
         }
 
         // Token yenilenirse otomatik olarak güncelle
         _messaging.onTokenRefresh.listen((newToken) async {
           try {
             await api.registerPushToken(authToken, newToken);
-            dev.log('Yenilenen FCM Token backend sunucusuna kaydedildi.');
+            print('Yenilenen FCM Token backend sunucusuna kaydedildi.');
           } catch (e) {
-            dev.log('Yenilenen FCM Token kaydedilemedi: $e');
+            print('Yenilenen FCM Token kaydedilemedi: $e');
           }
         });
       }
     } catch (e) {
-      dev.log('Bildirim servisi kurulum hatası: $e');
+      print('Bildirim servisi kurulum hatası: $e');
     }
   }
 }
