@@ -264,6 +264,11 @@ class ApiClient {
     );
     return UserProfile.fromJson(d['profile']);
   }
+
+  Future<String> getDailyBulletin() async {
+    final d = await _request('/space-weather/bulletin');
+    return d['bulletin'] as String? ?? 'Bülten yüklenemedi.';
+  }
 }
 
 final api = ApiClient();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../api/client.dart';
 import '../theme.dart';
 
 class AnalysisCard extends StatelessWidget {
@@ -177,6 +178,38 @@ class GuideAccordion extends StatefulWidget {
 
 class _GuideAccordionState extends State<GuideAccordion> {
   bool open = false;
+  String? _bulletin;
+  bool _loading = false;
+
+  void _loadBulletin() async {
+    setState(() => _loading = true);
+    try {
+      final text = await api.getDailyBulletin();
+      if (mounted) {
+        setState(() {
+          _bulletin = text;
+          _loading = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _bulletin = 'Bülten şu anda yüklenemedi. Lütfen daha sonra tekrar deneyin.';
+          _loading = false;
+        });
+      }
+    }
+  }
+
+  void _toggle() {
+    setState(() {
+      open = !open;
+      if (open && _bulletin == null && !_loading) {
+        _loadBulletin();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
@@ -186,7 +219,7 @@ class _GuideAccordionState extends State<GuideAccordion> {
         ),
         child: Column(children: [
           GestureDetector(
-            onTap: () => setState(() => open = !open),
+            onTap: _toggle,
             behavior: HitTestBehavior.opaque,
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -211,7 +244,20 @@ class _GuideAccordionState extends State<GuideAccordion> {
                     GuideItemWidget(
                       title: _guide[i][0],
                       content: _guide[i][1],
-                      isLast: i == _guide.length - 1,
+                      isLast: i == _guide.length - 1 && _bulletin == null && !_loading,
+                    ),
+                  if (_loading)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: Center(
+                        child: CircularProgressIndicator(color: AppColors.primaryGold),
+                      ),
+                    )
+                  else if (_bulletin != null)
+                    GuideItemWidget(
+                      title: 'Günlük Kozmik Hava Bülteni (NOAA)',
+                      content: _bulletin!,
+                      isLast: true,
                     ),
                 ],
               ),
