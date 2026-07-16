@@ -208,6 +208,8 @@ class _MainScreenState extends State<MainScreen> {
                   onUnlock: _showPremium,
                 ),
                 const SizedBox(height: 15),
+                const BulletinAccordion(),
+                const SizedBox(height: 15),
                 const GuideAccordion(),
                 const SizedBox(height: 24),
                 Center(

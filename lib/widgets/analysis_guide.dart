@@ -178,6 +178,58 @@ class GuideAccordion extends StatefulWidget {
 
 class _GuideAccordionState extends State<GuideAccordion> {
   bool open = false;
+  @override
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          color: AppColors.bgCard,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.borderLight),
+        ),
+        child: Column(children: [
+          GestureDetector(
+            onTap: () => setState(() => open = !open),
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(children: [
+                const Text('ⓘ', style: TextStyle(color: AppColors.primaryGold, fontSize: 18)),
+                const SizedBox(width: 10),
+                Expanded(
+                    child: Text('Jeomanyetik Rezonans Kılavuzu',
+                        style: AppText.sans(size: 16, weight: FontWeight.w700))),
+                Icon(open ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    color: open ? AppColors.primaryGold : AppColors.textMuted, size: 20),
+              ]),
+            ),
+          ),
+          if (open)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (int i = 0; i < _guide.length; i++)
+                    GuideItemWidget(
+                      title: _guide[i][0],
+                      content: _guide[i][1],
+                      isLast: i == _guide.length - 1,
+                    ),
+                ],
+              ),
+            ),
+        ]),
+      );
+}
+
+class BulletinAccordion extends StatefulWidget {
+  const BulletinAccordion({super.key});
+
+  @override
+  State<BulletinAccordion> createState() => _BulletinAccordionState();
+}
+
+class _BulletinAccordionState extends State<BulletinAccordion> {
+  bool open = false;
   String? _bulletin;
   bool _loading = false;
 
@@ -211,57 +263,61 @@ class _GuideAccordionState extends State<GuideAccordion> {
   }
 
   @override
-  Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-          color: AppColors.bgCard,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.borderLight),
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.bgCard,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.borderLight),
+      ),
+      child: Column(children: [
+        GestureDetector(
+          onTap: _toggle,
+          behavior: HitTestBehavior.opaque,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(children: [
+              const Text('📰', style: TextStyle(fontSize: 18)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Günlük Kozmik Hava Bülteni (NOAA)',
+                  style: AppText.sans(size: 16, weight: FontWeight.w700),
+                ),
+              ),
+              Icon(open ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  color: open ? AppColors.primaryGold : AppColors.textMuted, size: 20),
+            ]),
+          ),
         ),
-        child: Column(children: [
-          GestureDetector(
-            onTap: _toggle,
-            behavior: HitTestBehavior.opaque,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(children: [
-                const Text('ⓘ', style: TextStyle(color: AppColors.primaryGold, fontSize: 18)),
-                const SizedBox(width: 10),
-                Expanded(
-                    child: Text('Jeomanyetik Rezonans Kılavuzu',
-                        style: AppText.sans(size: 16, weight: FontWeight.w700))),
-                Icon(open ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                    color: open ? AppColors.primaryGold : AppColors.textMuted, size: 20),
-              ]),
+        if (open)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Divider(color: AppColors.borderLight, height: 1, thickness: 1),
+                const SizedBox(height: 12),
+                if (_loading)
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: CircularProgressIndicator(color: AppColors.primaryGold),
+                    ),
+                  )
+                else if (_bulletin != null)
+                  Text(
+                    _bulletin!,
+                    style: AppText.sans(
+                      size: 14,
+                      color: AppColors.textMuted,
+                      height: 1.5,
+                    ),
+                  ),
+              ],
             ),
           ),
-          if (open)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (int i = 0; i < _guide.length; i++)
-                    GuideItemWidget(
-                      title: _guide[i][0],
-                      content: _guide[i][1],
-                      isLast: i == _guide.length - 1 && _bulletin == null && !_loading,
-                    ),
-                  if (_loading)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: Center(
-                        child: CircularProgressIndicator(color: AppColors.primaryGold),
-                      ),
-                    )
-                  else if (_bulletin != null)
-                    GuideItemWidget(
-                      title: 'Günlük Kozmik Hava Bülteni (NOAA)',
-                      content: _bulletin!,
-                      isLast: true,
-                    ),
-                ],
-              ),
-            ),
-        ]),
-      );
+      ]),
+    );
+  }
 }
