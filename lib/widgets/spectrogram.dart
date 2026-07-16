@@ -68,7 +68,8 @@ class _SpectrogramState extends State<Spectrogram> {
                     'Detayları görmek için dalgaların üzerine dokunun',
                     style: AppText.sans(size: 13, color: AppColors.textMuted),
                     textAlign: TextAlign.center,
-                          : Text(
+                  )
+                : Text(
                     'Zaman: ${_range(activePoint.time)}${activePoint.predicted ? ' (Tahmin)' : ' (Ölçüm)'} | SR: ${activePoint.schumann.toStringAsFixed(2)} | ${getKpSpiritualDetails(activePoint.schumann * 0.9).label}',
                     style: AppText.sans(size: 13, color: getKpSpiritualDetails(activePoint.schumann * 0.9).color),
                     textAlign: TextAlign.center,
