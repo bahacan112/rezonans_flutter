@@ -21,6 +21,30 @@ class _JournalScreenState extends State<JournalScreen> {
   CorrelationReport? _correlationReport;
   String? _correlationError;
   bool _loadingCorrelation = false;
+  List<JournalEntry> _pastJournals = [];
+
+  String _getSymptomLabel(String slug) {
+    final match = _symptomDefs.firstWhere((d) => d['slug'] == slug, orElse: () => {'label': slug});
+    return match['label'] as String;
+  }
+
+  String _formatJournalDate(String dateStr) {
+    try {
+      final parts = dateStr.split('-');
+      if (parts.length != 3) return dateStr;
+      final dt = DateTime(int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+      const days = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+      const months = [
+        'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+        'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+      ];
+      final dStr = days[dt.weekday % 7];
+      final mStr = months[dt.month - 1];
+      return '${dt.day} $mStr ${dt.year}, $dStr';
+    } catch (_) {
+      return dateStr;
+    }
+  }
 
   final List<Map<String, dynamic>> _symptomDefs = const [
     // Fiziksel
@@ -85,6 +109,14 @@ class _JournalScreenState extends State<JournalScreen> {
         for (final sym in journal.symptoms.entries) {
           _selectedSymptoms[sym.key] = sym.value;
         }
+      }
+
+      // Load past journals
+      final list = await api.getJournals(token);
+      if (mounted) {
+        setState(() {
+          _pastJournals = list;
+        });
       }
 
       // Load correlation analysis if premium
@@ -159,6 +191,14 @@ class _JournalScreenState extends State<JournalScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Bugünkü durumunuz başarıyla kozmik veri tabanına kaydedildi!')),
         );
+      }
+
+      // Reload past journals list
+      final list = await api.getJournals(token);
+      if (mounted) {
+        setState(() {
+          _pastJournals = list;
+        });
       }
 
       // Refresh correlation report if premium
@@ -329,8 +369,112 @@ class _JournalScreenState extends State<JournalScreen> {
                       ? const CircularProgressIndicator(color: Colors.black)
                       : Text('Günlüğü Kaydet & Canlı Haritaya Sinyal Gönder',
                           style: AppText.sans(size: 14, weight: FontWeight.w800, color: Colors.black)),
-                ),
               ),
+              ),
+              const SizedBox(height: 32),
+
+              // 3.5. Past Journal Records Section
+              Text('GEÇMİŞ GÜNLÜK KAYITLARI',
+                  style: AppText.sans(size: 22, weight: FontWeight.w800, color: AppColors.primaryGold)),
+              Text('Önceki günlere ait hisleriniz ve günlük notlarınız',
+                  style: AppText.sans(size: 13, color: AppColors.textMuted)),
+              const SizedBox(height: 16),
+              
+              if (_pastJournals.isEmpty)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: AppColors.bgCard,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: AppColors.borderLight),
+                  ),
+                  child: Center(
+                    child: Text('Henüz kaydedilmiş bir günlük bulunmuyor.',
+                        style: AppText.sans(size: 13, color: AppColors.textMuted)),
+                  ),
+                )
+              else
+                ..._pastJournals.map((entry) {
+                  final activeSyms = entry.symptoms.entries
+                      .where((e) => e.value)
+                      .map((e) => _getSymptomLabel(e.key))
+                      .toList();
+
+                  return Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 12),
+                    decoration: BoxDecoration(
+                      color: AppColors.bgCard,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.borderLight),
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _formatJournalDate(entry.date),
+                                style: AppText.sans(size: 14, weight: FontWeight.w800, color: AppColors.primaryGold),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryGold.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: AppColors.primaryGold.withValues(alpha: 0.25)),
+                              ),
+                              child: Text(
+                                'Ruh Hali: ${entry.moodScore ?? 5}/10',
+                                style: AppText.sans(size: 12, weight: FontWeight.w700, color: AppColors.primaryGold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (activeSyms.isNotEmpty) ...[
+                          const SizedBox(height: 12),
+                          Wrap(
+                            spacing: 6,
+                            runSpacing: 4,
+                            children: activeSyms.map((sym) => Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.04),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                              ),
+                              child: Text(
+                                sym,
+                                style: AppText.sans(size: 11, color: AppColors.textMuted),
+                              ),
+                            )).toList(),
+                          ),
+                        ],
+                        if (entry.notes != null && entry.notes!.trim().isNotEmpty) ...[
+                          const SizedBox(height: 12),
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF0C0C14),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.white.withValues(alpha: 0.04)),
+                            ),
+                            child: Text(
+                              entry.notes!,
+                              style: AppText.sans(size: 13, height: 1.45, color: Colors.white70),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  );
+                }),
               const SizedBox(height: 32),
 
               // 4. Premium Weekly Correlation Analysis
