@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../models/kp.dart';
 
 const apiBase = 'http://10.0.2.2:4000';
 
@@ -268,6 +269,19 @@ class ApiClient {
   Future<String> getDailyBulletin() async {
     final d = await _request('/space-weather/bulletin');
     return d['bulletin'] as String? ?? 'Bülten yüklenemedi.';
+  }
+
+  Future<List<HistoryPoint>> getSpaceWeatherHistory() async {
+    final d = await _request('/space-weather/history');
+    final items = d['items'] as List? ?? [];
+    final now = DateTime.now();
+    return items.map((e) {
+      final time = DateTime.parse(e['timestamp'] as String).toLocal();
+      final kp = (e['kpIndex'] as num?)?.toDouble() ?? 0.0;
+      final schumann = (e['schumannScore'] as num?)?.toDouble() ?? kp;
+      final predicted = time.isAfter(now);
+      return HistoryPoint(time, kp, predicted, schumann: schumann);
+    }).toList();
   }
 }
 

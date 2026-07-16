@@ -60,21 +60,46 @@ class _MainScreenState extends State<MainScreen> {
   String? get _token => context.read<AuthProvider>().token;
 
   Future<void> _load() async {
-    final d = await fetchSchumannData();
-    if (mounted) setState(() {
-      data = d;
-      loading = false;
-      if (d.history.isNotEmpty) {
-        HistoryPoint? latest;
-        for (int i = d.history.length - 1; i >= 0; i--) {
-          if (!d.history[i].predicted) {
-            latest = d.history[i];
-            break;
-          }
-        }
-        selectedPoint = latest ?? d.history.first;
+    try {
+      final history = await api.getSpaceWeatherHistory();
+      double currentSchumann = 0.0;
+      if (history.isNotEmpty) {
+        final lastObserved = history.lastWhere((h) => !h.predicted, orElse: () => history.last);
+        currentSchumann = lastObserved.schumann;
       }
-    });
+      final d = SchumannData(currentSchumann, history);
+      if (mounted) setState(() {
+        data = d;
+        loading = false;
+        if (d.history.isNotEmpty) {
+          HistoryPoint? latest;
+          for (int i = d.history.length - 1; i >= 0; i--) {
+            if (!d.history[i].predicted) {
+              latest = d.history[i];
+              break;
+            }
+          }
+          selectedPoint = latest ?? d.history.first;
+        }
+      });
+    } catch (e) {
+      debugPrint('[main_screen] backend history fetch failed, using NOAA fallback: $e');
+      final d = await fetchSchumannData();
+      if (mounted) setState(() {
+        data = d;
+        loading = false;
+        if (d.history.isNotEmpty) {
+          HistoryPoint? latest;
+          for (int i = d.history.length - 1; i >= 0; i--) {
+            if (!d.history[i].predicted) {
+              latest = d.history[i];
+              break;
+            }
+          }
+          selectedPoint = latest ?? d.history.first;
+        }
+      });
+    }
   }
 
   Future<void> _loadNotifications() async {
@@ -119,7 +144,7 @@ class _MainScreenState extends State<MainScreen> {
     return sd != ed ? 'Zaman: $sd $sh:00 - $ed $eh:00$suffix' : 'Zaman: $sd $sh:00 - $eh:00$suffix';
   }
 
-  double get activeKp => simulating ? simKp : (selectedPoint?.kp ?? data?.currentKp ?? 0.0);
+  double get activeKp => simulating ? simKp : (data?.currentKp ?? 0.0);
 
   List<HistoryPoint> get history {
     final base = data?.history ?? [];

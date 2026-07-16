@@ -68,10 +68,9 @@ class _SpectrogramState extends State<Spectrogram> {
                     'Detayları görmek için dalgaların üzerine dokunun',
                     style: AppText.sans(size: 13, color: AppColors.textMuted),
                     textAlign: TextAlign.center,
-                  )
-                : Text(
-                    'Zaman: ${_range(activePoint.time)}${activePoint.predicted ? ' (Tahmin)' : ' (Ölçüm)'} | Genlik: ${activePoint.kp.toStringAsFixed(2)} | ${getKpSpiritualDetails(activePoint.kp).label}',
-                    style: AppText.sans(size: 13, color: getKpSpiritualDetails(activePoint.kp).color),
+                          : Text(
+                    'Zaman: ${_range(activePoint.time)}${activePoint.predicted ? ' (Tahmin)' : ' (Ölçüm)'} | SR: ${activePoint.schumann.toStringAsFixed(2)} | ${getKpSpiritualDetails(activePoint.schumann * 0.9).label}',
+                    style: AppText.sans(size: 13, color: getKpSpiritualDetails(activePoint.schumann * 0.9).color),
                     textAlign: TextAlign.center,
                   ),
           ),
@@ -122,8 +121,8 @@ class _SpectrogramState extends State<Spectrogram> {
                           }
                         },
                         child: CustomPaint(
-                          size: Size(totalWidth, h),
-                          painter: _SpecPainter(widget.history, activePoint, colW),
+                           size: Size(totalWidth, h),
+                           painter: _SpecPainter(widget.history, activePoint, colW),
                         ),
                       ),
                     ),
@@ -146,9 +145,9 @@ class _SpecPainter extends CustomPainter {
 
   // The global _bandYFactors is used here instead.
 
-  // Map Kp values to a continuous color scale matching the real SOS70 spectrogram
-  Color _getSpectrogramColor(double kp) {
-    final t = (kp / 9.0).clamp(0.0, 1.0);
+  // Map Schumann values to a continuous color scale matching the real SOS70 spectrogram
+  Color _getSpectrogramColor(double val) {
+    final t = (val / 10.0).clamp(0.0, 1.0);
     if (t < 0.15) {
       // Very Quiet: Nice glowing deep blue to cyan/teal
       return Color.lerp(const Color(0xFF001255), const Color(0xFF0091EA), t / 0.15)!;
@@ -162,7 +161,7 @@ class _SpecPainter extends CustomPainter {
       // Strong: Yellow-Orange to Red
       return Color.lerp(const Color(0xFFFFD600), const Color(0xFFE53935), (t - 0.55) / 0.20)!;
     } else {
-      // Zirve/Extreme: Red to Pure Glowing White
+      // Zirve/Extreme: Red to Glowing White
       return Color.lerp(const Color(0xFFE53935), const Color(0xFFFFFFFF), (t - 0.75) / 0.25)!;
     }
   }
@@ -190,7 +189,6 @@ class _SpecPainter extends CustomPainter {
     if (history.isEmpty) return;
 
     // 3. Interpolate and Paint continuous waves
-    // We increase horizontal resolution by interpolating between the 3-hour data points
     const int interpolationSteps = 4; // Sub-steps per column
     final double stepWidth = colW / interpolationSteps;
     final int totalSteps = (history.length - 1) * interpolationSteps + 1;
@@ -204,8 +202,8 @@ class _SpecPainter extends CustomPainter {
       final HistoryPoint leftPoint = history[leftIdx];
       final HistoryPoint rightPoint = history[rightIdx];
 
-      // Interpolate Kp and time
-      final double kp = leftPoint.kp + (rightPoint.kp - leftPoint.kp) * t;
+      // Interpolate Schumann Score and time
+      final double schumann = leftPoint.schumann + (rightPoint.schumann - leftPoint.schumann) * t;
       final bool forecast = leftPoint.predicted;
 
       final double x = exactIndex * colW;
@@ -213,8 +211,7 @@ class _SpecPainter extends CustomPainter {
       // Skip painting lines off canvas
       if (x < 0 || x > size.width) continue;
 
-      // Draw the spectrogram data as overlapping vertical gradient blobs for each frequency band
-      // 1st is geomagnetic base noise (0 Hz region), next 5 are Schumann resonance peaks
+      // Draw vertical gradient blobs for each frequency band
       const bandIntensityFactors = [1.1, 1.0, 0.70, 0.45, 0.28, 0.15];
       final double opacityDim = forecast ? 0.35 : 1.0;
       
@@ -223,17 +220,13 @@ class _SpecPainter extends CustomPainter {
         final double yc = yFactor * size.height;
         
         final double decay = bandIntensityFactors[j];
-        final double bandKp = kp * decay;
+        final double bandSchumann = schumann * decay;
         
-        // Determine intensity and color based on the decayed Kp value for this specific band
-        // Ensure a solid base intensity (0.3 minimum) representing background Schumann resonance activity
-        final double bandIntensity = (0.3 + (bandKp / 9.0) * 0.7).clamp(0.0, 1.0);
-        final Color baseColor = _getSpectrogramColor(bandKp);
+        final double bandIntensity = (0.3 + (bandSchumann / 10.0) * 0.7).clamp(0.0, 1.0);
+        final Color baseColor = _getSpectrogramColor(bandSchumann);
 
-        // Define a smooth vertical glow height based on Kp intensity for this specific band
-        // The 0 Hz geomagnetic band (j = 0) is drawn slightly thicker to fill the top space beautifully
         final double baseBlobHeight = j == 0 ? 18.0 : 14.0;
-        final double blobHeight = baseBlobHeight + (bandKp * (j == 0 ? 3.0 : 2.5));
+        final double blobHeight = baseBlobHeight + (bandSchumann * (j == 0 ? 3.0 : 2.5));
         final rect = Rect.fromLTRB(
           x,
           yc - (blobHeight / 2),
@@ -255,11 +248,9 @@ class _SpecPainter extends CustomPainter {
         canvas.drawRect(rect, blobPaint);
       }
 
-      // 4. Draw Vertical Lightning/Solar Bursts (White vertical streams for high activity points)
-      // These are drawn wider and much more prominent/solid at the top (0-12 Hz region)
-      // and fade out towards the bottom (32-40 Hz), exactly like the real SOS70
-      if (kp >= 3.0 && !forecast) {
-        final double burstOpacity = ((kp - 3.0) / 6.0).clamp(0.1, 1.0);
+      // 4. Solar Bursts (White vertical streams for high activity points)
+      if (schumann >= 3.3 && !forecast) {
+        final double burstOpacity = ((schumann - 3.3) / 6.7).clamp(0.1, 1.0);
         final burstRect = Rect.fromLTRB(x, 0, x + stepWidth + 0.5, size.height);
         final burstPaint = Paint()
           ..shader = LinearGradient(

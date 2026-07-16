@@ -78,6 +78,8 @@ String formatTime(DateTime d) =>
 class HistoryPoint {
   final DateTime time;
   final double kp;
+  final double schumann;
   final bool predicted;
-  HistoryPoint(this.time, this.kp, this.predicted);
+  HistoryPoint(this.time, this.kp, this.predicted, {double? schumann})
+      : schumann = schumann ?? kp;
 }
