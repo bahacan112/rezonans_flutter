@@ -11,30 +11,7 @@ class StatusCard extends StatefulWidget {
   State<StatusCard> createState() => _StatusCardState();
 }
 
-class _StatusCardState extends State<StatusCard> with SingleTickerProviderStateMixin {
-  late final AnimationController _pulse;
-
-  @override
-  void initState() {
-    super.initState();
-    _pulse = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: ((4 - widget.kp / 3).clamp(1, 4) * 1000).round()),
-    )..repeat(reverse: true);
-  }
-
-  @override
-  void didUpdateWidget(StatusCard old) {
-    super.didUpdateWidget(old);
-    _pulse.duration =
-        Duration(milliseconds: ((4 - widget.kp / 3).clamp(1, 4) * 1000).round());
-  }
-
-  @override
-  void dispose() {
-    _pulse.dispose();
-    super.dispose();
-  }
+class _StatusCardState extends State<StatusCard> {
 
   @override
   Widget build(BuildContext context) {
@@ -46,40 +23,84 @@ class _StatusCardState extends State<StatusCard> with SingleTickerProviderStateM
         border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
       padding: const EdgeInsets.all(16),
-      child: Row(children: [
-        ScaleTransition(
-          scale: Tween(begin: 1.0, end: 1.04).animate(
-              CurvedAnimation(parent: _pulse, curve: Curves.easeInOut)),
-          child: Container(
-            width: 82,
-            height: 82,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.black.withValues(alpha: 0.55),
-              border: Border.all(color: d.color, width: 3.5),
-              boxShadow: [BoxShadow(color: d.color.withValues(alpha: 0.5), blurRadius: 14)],
-            ),
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Text(widget.kp.toStringAsFixed(2),
-                  style: AppText.sans(size: 23, weight: FontWeight.w800, color: d.color)),
-              Text('RS',
-                  style: AppText.sans(size: 11, weight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 0.5)),
-            ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(d.label, style: AppText.sans(size: 17, weight: FontWeight.w700)),
+                    const SizedBox(height: 2),
+                    Text(d.spiritual,
+                        style: AppText.sans(size: 13, weight: FontWeight.w600, color: AppColors.primaryGold)),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    widget.kp.toStringAsFixed(2),
+                    style: AppText.sans(size: 24, weight: FontWeight.w900, color: d.color),
+                  ),
+                  Text(
+                    'RS',
+                    style: AppText.sans(size: 9, weight: FontWeight.w700, color: AppColors.textMuted, letterSpacing: 0.5),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ),
-        const SizedBox(width: 20),
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(d.label, style: AppText.sans(size: 19, weight: FontWeight.w700)),
-            const SizedBox(height: 3),
-            Text(d.spiritual,
-                style: AppText.sans(size: 15, weight: FontWeight.w600, color: AppColors.primaryGold)),
-            const SizedBox(height: 8),
-            Text(widget.updatedLabel,
-                style: AppText.sans(size: 14, color: AppColors.textMuted)),
-          ]),
-        ),
-      ]),
+          const SizedBox(height: 14),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final progress = (widget.kp / 10.0).clamp(0.0, 1.0);
+              final fillWidth = constraints.maxWidth * progress;
+              return Container(
+                height: 12,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.black45,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                ),
+                alignment: Alignment.centerLeft,
+                child: fillWidth > 0
+                    ? Container(
+                        width: fillWidth,
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          color: d.color,
+                          borderRadius: BorderRadius.circular(6),
+                          boxShadow: [
+                            BoxShadow(
+                              color: d.color.withValues(alpha: 0.4),
+                              blurRadius: 8,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              );
+            },
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('0.00', style: AppText.mono(size: 10, color: AppColors.textMuted)),
+              Text(widget.updatedLabel, style: AppText.sans(size: 12, color: AppColors.textMuted)),
+              Text('10.00', style: AppText.mono(size: 10, color: AppColors.textMuted)),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
