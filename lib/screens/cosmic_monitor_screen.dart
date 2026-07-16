@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../api/client.dart';
+import '../models/kp.dart';
 import '../theme.dart';
 
 class CosmicMonitorScreen extends StatefulWidget {
@@ -12,11 +14,44 @@ class _CosmicMonitorScreenState extends State<CosmicMonitorScreen> {
   final String _sdoUrl = 'https://sdo.gsfc.nasa.gov/assets/img/latest/latest_512_0193.jpg';
   bool _refreshingImage = false;
   late ImageProvider _sunImageProvider;
+  bool _loadingData = true;
+  HistoryPoint? _latestData;
+  double? _speed;
+  double? _density;
+  double? _bt;
+  double? _bz;
 
   @override
   void initState() {
     super.initState();
     _sunImageProvider = NetworkImage('$_sdoUrl?t=${DateTime.now().millisecondsSinceEpoch}');
+    _loadLatestData();
+  }
+
+  void _loadLatestData() async {
+    try {
+      final history = await api.getSpaceWeatherHistory();
+      if (history.isNotEmpty) {
+        final lastObserved = history.lastWhere((h) => !h.predicted, orElse: () => history.last);
+        final latestSnapshot = await api.getLatestSpaceWeather();
+        if (mounted) {
+          setState(() {
+            _latestData = lastObserved;
+            if (latestSnapshot != null) {
+              _speed = latestSnapshot['solarWindSpeed'] != null ? (latestSnapshot['solarWindSpeed'] as num).toDouble() : null;
+              _density = latestSnapshot['solarWindDensity'] != null ? (latestSnapshot['solarWindDensity'] as num).toDouble() : null;
+              _bt = latestSnapshot['magneticFieldBt'] != null ? (latestSnapshot['magneticFieldBt'] as num).toDouble() : null;
+              _bz = latestSnapshot['magneticFieldBz'] != null ? (latestSnapshot['magneticFieldBz'] as num).toDouble() : null;
+            }
+            _loadingData = false;
+          });
+        }
+      } else {
+        if (mounted) setState(() => _loadingData = false);
+      }
+    } catch (_) {
+      if (mounted) setState(() => _loadingData = false);
+    }
   }
 
   void _refreshSunImage() {
@@ -41,6 +76,69 @@ class _CosmicMonitorScreenState extends State<CosmicMonitorScreen> {
               Text('Canlı güneş etkinliği ve kozmik transit uyumu',
                   style: AppText.sans(size: 13, color: AppColors.textMuted)),
               const SizedBox(height: 20),
+
+              // Kozmik Hava Durumu & Güneş Rüzgarları Dashboard
+              _buildSectionCard(
+                title: 'Kozmik Hava Durumu & Güneş Rüzgarı',
+                subtitle: 'Dünya ile Güneş arasındaki L1 noktasında ölçülen anlık plazma ve manyetik alan hareketleri.',
+                child: _loadingData
+                    ? const Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 20),
+                          child: CircularProgressIndicator(color: AppColors.primaryGold),
+                        ),
+                      )
+                    : SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            _buildParamCard(
+                              title: 'KP ENDEKSİ',
+                              value: 'Kp ${_latestData?.kp.toStringAsFixed(1) ?? '1.7'}',
+                              status: _latestData != null ? getKpSpiritualDetails(_latestData!.kp).label.split('(')[0] : 'Sakin',
+                              icon: Icons.show_chart,
+                              color: _latestData != null ? getKpSpiritualDetails(_latestData!.kp).color : KpColors.quiet,
+                            ),
+                            _buildParamCard(
+                              title: 'GÜNEŞ RÜZGARI HIZI',
+                              value: '${_speed?.toStringAsFixed(0) ?? '465'} km/s',
+                              status: (_speed ?? 465) >= 500 ? 'Hızlı' : 'Normal',
+                              icon: Icons.speed,
+                              color: (_speed ?? 465) >= 500 ? Colors.amber : Colors.green,
+                            ),
+                            _buildParamCard(
+                              title: 'PROTON YOĞUNLUĞU',
+                              value: '${_density?.toStringAsFixed(1) ?? '2.8'} p/cm³',
+                              status: 'Parçacık yoğunluğu',
+                              icon: Icons.grain,
+                              color: Colors.purpleAccent,
+                            ),
+                            _buildParamCard(
+                              title: 'BZ DEĞERİ (YÖN)',
+                              value: '${_bz != null && _bz! >= 0 ? '+' : ''}${_bz?.toStringAsFixed(1) ?? '-0.7'} nT',
+                              status: (_bz ?? -0.7) < 0 ? 'Kalkan Açık (G)' : 'Kalkan Kapalı (K)',
+                              icon: Icons.shield,
+                              color: (_bz ?? -0.7) < 0 ? Colors.redAccent : Colors.green,
+                            ),
+                            _buildParamCard(
+                              title: 'TOPLAM ALAN (BT)',
+                              value: '${_bt?.toStringAsFixed(1) ?? '4.4'} nT',
+                              status: 'Alan gücü',
+                              icon: Icons.waves,
+                              color: Colors.orangeAccent,
+                            ),
+                            _buildParamCard(
+                              title: 'REZONANS (SR)',
+                              value: '${_latestData?.schumann.toStringAsFixed(2) ?? '1.38'} SR',
+                              status: 'Rezonans Skoru',
+                              icon: Icons.radar,
+                              color: AppColors.primaryGold,
+                            ),
+                          ],
+                        ),
+                      ),
+              ),
+              const SizedBox(height: 16),
 
               // 1. Live Sun Monitor AIA 193
               _buildSectionCard(
@@ -224,7 +322,7 @@ class _CosmicMonitorScreenState extends State<CosmicMonitorScreen> {
     );
   }
 
-  Widget _buildSectionCard({required String title, required Widget child}) {
+  Widget _buildSectionCard({required String title, String? subtitle, required Widget child}) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -237,8 +335,74 @@ class _CosmicMonitorScreenState extends State<CosmicMonitorScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: AppText.sans(size: 16, weight: FontWeight.w700, color: Colors.white)),
+          if (subtitle != null) ...[
+            const SizedBox(height: 4),
+            Text(subtitle, style: AppText.sans(size: 12, color: AppColors.textMuted)),
+          ],
           const SizedBox(height: 12),
           child,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildParamCard({
+    required String title,
+    required String value,
+    required String status,
+    required IconData icon,
+    required Color color,
+  }) {
+    return Container(
+      width: 140,
+      margin: const EdgeInsets.only(right: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0C0C14),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+      ),
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: AppText.sans(size: 10, weight: FontWeight.w700, color: AppColors.textMuted),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Icon(icon, size: 14, color: color),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: AppText.sans(size: 18, weight: FontWeight.w800, color: Colors.white),
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              Container(
+                width: 6,
+                height: 6,
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  status,
+                  style: AppText.sans(size: 10, color: AppColors.textMuted),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

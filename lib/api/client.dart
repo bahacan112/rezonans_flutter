@@ -283,6 +283,15 @@ class ApiClient {
       return HistoryPoint(time, kp, predicted, schumann: schumann);
     }).toList();
   }
+
+  Future<Map<String, dynamic>?> getLatestSpaceWeather() async {
+    try {
+      final d = await _request('/space-weather/latest');
+      return d['snapshot'] as Map<String, dynamic>?;
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 final api = ApiClient();
