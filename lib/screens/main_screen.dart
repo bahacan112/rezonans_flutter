@@ -137,16 +137,20 @@ class _MainScreenState extends State<MainScreen> {
     if (t != null) api.setPrefs(t, next).catchError((_) => next);
   }
 
-  String _formatSelectedPointTime(HistoryPoint? p) {
+
+
+  String _formatLivePointTime(HistoryPoint? p) {
     if (p == null) return '--:--';
-    final start = p.time;
-    final end = start.add(const Duration(hours: 3));
+    final t = p.time;
+    final startImpact = t.add(const Duration(minutes: 30));
+    final endImpact = t.add(const Duration(minutes: 60));
     const days = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
-    final sd = days[start.weekday % 7], ed = days[end.weekday % 7];
-    final sh = start.hour.toString().padLeft(2, '0');
-    final eh = end.hour.toString().padLeft(2, '0');
-    final suffix = p.predicted ? ' (Tahmin)' : ' (Ölçüm)';
-    return sd != ed ? 'Zaman: $sd $sh:00 - $ed $eh:00$suffix' : 'Zaman: $sd $sh:00 - $eh:00$suffix';
+    final dStr = days[startImpact.weekday % 7];
+    final sh = startImpact.hour.toString().padLeft(2, '0');
+    final sm = startImpact.minute.toString().padLeft(2, '0');
+    final eh = endImpact.hour.toString().padLeft(2, '0');
+    final em = endImpact.minute.toString().padLeft(2, '0');
+    return 'Zaman (Küresel Etki): $dStr $sh:$sm - $eh:$em';
   }
 
   double get activeKp => simulating ? simKp : (data?.currentKp ?? 0.0);
@@ -228,7 +232,7 @@ class _MainScreenState extends State<MainScreen> {
                     kp: activeKp,
                     updatedLabel: simulating
                         ? 'Simülasyon Aktif'
-                        : _formatSelectedPointTime(livePoint)),
+                        : _formatLivePointTime(livePoint)),
                 const SizedBox(height: 15),
                 _buildSectionCard(
                   title: 'Kozmik Hava Durumu & Güneş Rüzgarı',
