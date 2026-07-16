@@ -35,6 +35,7 @@ class _MainScreenState extends State<MainScreen> {
   Timer? _timer;
   HistoryPoint? selectedPoint;
   int _currentIndex = 0;
+  Map<String, dynamic>? _latestSnapshot;
 
   @override
   void initState() {
@@ -70,8 +71,10 @@ class _MainScreenState extends State<MainScreen> {
         updatedAt = lastObserved.time;
       }
       final d = SchumannData(currentSchumann, updatedAt, history);
+      final latestSnapshot = await api.getLatestSpaceWeather();
       if (mounted) setState(() {
         data = d;
+        _latestSnapshot = latestSnapshot;
         loading = false;
         if (d.history.isNotEmpty) {
           HistoryPoint? latest;
@@ -215,6 +218,60 @@ class _MainScreenState extends State<MainScreen> {
                     updatedLabel: simulating
                         ? 'Simülasyon Aktif'
                         : _formatSelectedPointTime(selectedPoint)),
+                const SizedBox(height: 15),
+                _buildSectionCard(
+                  title: 'Kozmik Hava Durumu & Güneş Rüzgarı',
+                  subtitle: 'Dünya ile Güneş arasındaki L1 noktasında ölçülen anlık plazma ve manyetik alan hareketleri.',
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        _buildParamCard(
+                          title: 'KP ENDEKSİ',
+                          value: 'Kp ${activeKp.toStringAsFixed(1)}',
+                          status: getKpSpiritualDetails(activeKp).label.split('(')[0],
+                          icon: Icons.show_chart,
+                          color: getKpSpiritualDetails(activeKp).color,
+                        ),
+                        _buildParamCard(
+                          title: 'GÜNEŞ RÜZGARI HIZI',
+                          value: '${_latestSnapshot?['solarWindSpeed'] != null ? (_latestSnapshot!['solarWindSpeed'] as num).toStringAsFixed(0) : '465'} km/s',
+                          status: (_latestSnapshot?['solarWindSpeed'] != null && (_latestSnapshot!['solarWindSpeed'] as num) >= 500) ? 'Hızlı' : 'Normal',
+                          icon: Icons.speed,
+                          color: (_latestSnapshot?['solarWindSpeed'] != null && (_latestSnapshot!['solarWindSpeed'] as num) >= 500) ? Colors.amber : Colors.green,
+                        ),
+                        _buildParamCard(
+                          title: 'PROTON YOĞUNLUĞU',
+                          value: '${_latestSnapshot?['solarWindDensity'] != null ? (_latestSnapshot!['solarWindDensity'] as num).toStringAsFixed(1) : '2.8'} p/cm³',
+                          status: 'Parçacık yoğunluğu',
+                          icon: Icons.grain,
+                          color: Colors.purpleAccent,
+                        ),
+                        _buildParamCard(
+                          title: 'BZ DEĞERİ (YÖN)',
+                          value: '${_latestSnapshot?['magneticFieldBz'] != null && (_latestSnapshot!['magneticFieldBz'] as num) >= 0 ? '+' : ''}${_latestSnapshot?['magneticFieldBz'] != null ? (_latestSnapshot!['magneticFieldBz'] as num).toStringAsFixed(1) : '-0.7'} nT',
+                          status: (_latestSnapshot?['magneticFieldBz'] != null && (_latestSnapshot!['magneticFieldBz'] as num) < 0) ? 'Kalkan Açık (G)' : 'Kalkan Kapalı (K)',
+                          icon: Icons.shield,
+                          color: (_latestSnapshot?['magneticFieldBz'] != null && (_latestSnapshot!['magneticFieldBz'] as num) < 0) ? Colors.redAccent : Colors.green,
+                        ),
+                        _buildParamCard(
+                          title: 'TOPLAM ALAN (BT)',
+                          value: '${_latestSnapshot?['magneticFieldBt'] != null ? (_latestSnapshot!['magneticFieldBt'] as num).toStringAsFixed(1) : '4.4'} nT',
+                          status: 'Alan gücü',
+                          icon: Icons.waves,
+                          color: Colors.orangeAccent,
+                        ),
+                        _buildParamCard(
+                          title: 'REZONANS (SR)',
+                          value: '${(selectedPoint?.schumann ?? activeKp).toStringAsFixed(2)} SR',
+                          status: 'Rezonans Skoru',
+                          icon: Icons.radar,
+                          color: AppColors.primaryGold,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 15),
                 Spectrogram(
                   history: history,
@@ -439,6 +496,92 @@ class _MainScreenState extends State<MainScreen> {
               content: Text('Ödeme başarılı! Premium üyeliğiniz aktif edildi.')));
         }
       }),
+    );
+  }
+
+  Widget _buildSectionCard({required String title, String? subtitle, required Widget child}) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColors.bgCard,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.borderLight),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: AppText.sans(size: 16, weight: FontWeight.w700, color: Colors.white)),
+          if (subtitle != null) ...[
+            const SizedBox(height: 4),
+            Text(subtitle, style: AppText.sans(size: 12, color: AppColors.textMuted)),
+          ],
+          const SizedBox(height: 12),
+          child,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildParamCard({
+    required String title,
+    required String value,
+    required String status,
+    required IconData icon,
+    required Color color,
+  }) {
+    return Container(
+      width: 140,
+      margin: const EdgeInsets.only(right: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0C0C14),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+      ),
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: AppText.sans(size: 10, weight: FontWeight.w700, color: AppColors.textMuted),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Icon(icon, size: 14, color: color),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: AppText.sans(size: 18, weight: FontWeight.w800, color: Colors.white),
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              Container(
+                width: 6,
+                height: 6,
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  status,
+                  style: AppText.sans(size: 10, color: AppColors.textMuted),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
