@@ -63,11 +63,13 @@ class _MainScreenState extends State<MainScreen> {
     try {
       final history = await api.getSpaceWeatherHistory();
       double currentSchumann = 0.0;
+      DateTime updatedAt = DateTime.now();
       if (history.isNotEmpty) {
         final lastObserved = history.lastWhere((h) => !h.predicted, orElse: () => history.last);
         currentSchumann = lastObserved.schumann;
+        updatedAt = lastObserved.time;
       }
-      final d = SchumannData(currentSchumann, history);
+      final d = SchumannData(currentSchumann, updatedAt, history);
       if (mounted) setState(() {
         data = d;
         loading = false;
