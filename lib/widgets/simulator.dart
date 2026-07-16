@@ -40,10 +40,10 @@ class Simulator extends StatelessWidget {
           ),
         ]),
         const SizedBox(height: 2),
-        Text('Farklı Genlik seviyelerinin etkilerini ve renk değişimlerini test edin',
+        Text('Farklı Kp seviyelerinin etkilerini ve renk değişimlerini test edin',
             style: AppText.sans(size: 13, color: AppColors.textMuted)),
         Row(children: [
-          Text('Genlik 0', style: AppText.mono(size: 13, color: AppColors.textMuted)),
+          Text('Kp 0', style: AppText.mono(size: 13, color: AppColors.textMuted)),
           Expanded(
             child: SliderTheme(
               data: SliderTheme.of(context).copyWith(
@@ -55,11 +55,11 @@ class Simulator extends StatelessWidget {
               child: Slider(min: 0, max: 9, value: value, onChanged: onChanged),
             ),
           ),
-          Text('Genlik 9', style: AppText.mono(size: 13, color: AppColors.textMuted)),
+          Text('Kp 9', style: AppText.mono(size: 13, color: AppColors.textMuted)),
         ]),
         Row(children: [
           Text('Simüle Edilen Değer: ', style: AppText.sans(size: 14, color: AppColors.textMuted)),
-          Text(simulating ? 'Genlik ${value.toStringAsFixed(1)}' : 'Canlı Akış',
+          Text(simulating ? 'Kp ${value.toStringAsFixed(1)}' : 'Canlı Akış',
               style: AppText.sans(size: 14, weight: FontWeight.w700, color: color)),
           const Spacer(),
           if (simulating)
