@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-const apiBase = 'https://renozans-backend.baha.tr';
+const apiBase = 'http://10.0.2.2:4000';
 
 class AuthUser {
   final String id;
