@@ -151,6 +151,17 @@ class _MainScreenState extends State<MainScreen> {
 
   double get activeKp => simulating ? simKp : (data?.currentKp ?? 0.0);
 
+  HistoryPoint? get livePoint {
+    final list = data?.history ?? [];
+    if (list.isEmpty) return null;
+    for (int i = list.length - 1; i >= 0; i--) {
+      if (!list[i].predicted) {
+        return list[i];
+      }
+    }
+    return list.first;
+  }
+
   List<HistoryPoint> get history {
     final base = data?.history ?? [];
     if (!simulating) return base;
@@ -217,7 +228,7 @@ class _MainScreenState extends State<MainScreen> {
                     kp: activeKp,
                     updatedLabel: simulating
                         ? 'Simülasyon Aktif'
-                        : _formatSelectedPointTime(selectedPoint)),
+                        : _formatSelectedPointTime(livePoint)),
                 const SizedBox(height: 15),
                 _buildSectionCard(
                   title: 'Kozmik Hava Durumu & Güneş Rüzgarı',
