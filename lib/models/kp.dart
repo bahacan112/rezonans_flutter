@@ -4,9 +4,11 @@ import '../theme.dart';
 class KpDetails {
   final String label;
   final String spiritual;
-  final String desc;
+  final String scientific;
+  final String physical;
+  final String spiritualGuidance;
   final Color color;
-  const KpDetails(this.label, this.spiritual, this.desc, this.color);
+  const KpDetails(this.label, this.spiritual, this.scientific, this.physical, this.spiritualGuidance, this.color);
 }
 
 KpDetails getKpSpiritualDetails(double kp) {
@@ -14,56 +16,72 @@ KpDetails getKpSpiritualDetails(double kp) {
     return const KpDetails(
       'Dengeli Akış (Sakin)',
       'Dengeli Enerji Akışı & Topraklama',
-      'Manyetik alan oldukça dingin ve dengeli. İç gözlem, zihinsel odaklanma, derin gevşeme ve kök çakra topraklama çalışmaları için mükemmel bir zemin. Zihnin gürültüsünü yatıştırmak ve sessizlik meditasyonları yapmak için ideal bir dönem.',
+      'Manyetik alan oldukça dingin ve dengeli. Dünya\'nın koruyucu kalkanı stabil durumda, plazma akışı normal seviyelerde seyrediyor.',
+      'Sakin bir sinir sistemi, dengeli kalp ritmi, derin ve dinlendirici uyku. Fiziksel bedende güçlü bir topraklanma hissi.',
+      'Kök çakra meditasyonları için mükemmel bir zaman. Zihnin gürültüsünü yatıştırmak, sessizlikte kalmak ve adaçayı yakarak alanınızı arındırmak için idealdir.',
       KpColors.quiet,
     );
   } else if (kp < 4) {
     return const KpDetails(
       'Enerjisel Kıpırdanma',
       'Yenilenme ve Hafif Duyarlılık',
-      'Elektromanyetik alanda hafif bir uyanış ve hareketlilik var. Aura alanında genişleme ve hafif bir duyarlılık hissedilebilir. Prana akışını dengeleyici nefes egzersizleri ve hafif esneme hareketleri için harika bir zaman dilimi.',
+      'Güneş rüzgarında hafif bir hızlanma ve manyetik alanda küçük ölçekli dalgalanma başlangıcı mevcut.',
+      'Hafif esneme ihtiyacı, rüyalarda sembollerin canlanması ve aura sınırlarında ince bir duyarlılık artışı.',
+      'Prana akışını dengelemek için nefes egzersizleri yapın. Kristal kuvars veya ametist taşları ile aura alanınızı güçlendirebilirsiniz.',
       KpColors.unsettled,
     );
   } else if (kp < 5) {
     return const KpDetails(
       'Yüksek Titreşim (Aktif)',
       'Yüksek Sezgi ve Hücresel Uyanış',
-      'Aktif bir manyetik alan mevcut. Bilinçaltı kapıları aralanıyor; rüyaların berraklaşması, sezgilerin ve psişik duyarlılığın güçlenmesi olasıdır. Üçüncü göz çalışmaları, rüya günlükleri tutma ve durugörü meditasyonları için çok elverişli bir süreç.',
+      'Jeomanyetik alan aktif durumda. Güneş\'ten gelen yüklü parçacıklar manyetosfer sınırlarını uyararak iyonosferde hareketlilik yaratıyor.',
+      'Başın arka kısmında hafif bir basınç, duygusal hassasiyet ve başkalarının enerjilerini hissetme (empati) yeteneğinde artış.',
+      'Üçüncü göz ve taç çakra çalışmaları için çok uygundur. Enerjisel sınırlarınızı korumak için kendinizi mavi bir ışık küresi içinde imgeleyin.',
       KpColors.active,
     );
   } else if (kp < 6) {
     return const KpDetails(
-      'Işık Kapısı (G1 Manyetik Aktivite)',
+      'Işık Kapısı (G1)',
       'DNA Aktivasyonu & Evrensel Bilgi Akışı',
-      "Güneş'ten gelen yüksek frekanslı kozmik bilgi paketlerinin iyonosfere ulaştığı özel bir uyanış penceresi. Zihinde uykusuzluk veya fiziksel duyarlılık olarak yansıyan bu etki, aslında derin çakra çalışmaları, DNA aktivasyonu meditasyonları ve yüksek benlikle bağ kurmak için olağanüstü bir fırsattır.",
+      'G1 seviyesinde jeomanyetik fırtına. Manyetik kalkanın güney yönlü (Bz-) aralanması sonucu güneş rüzgarı parçacıkları iyonosfere sızmaya başladı.',
+      'Uykuya geçişte zorlanma, hafif şakak ağrıları, kulaklarda yüksek frekanslı çınlama sesleri ve ani vücut sıcaklığı değişimleri.',
+      'Yoğun ışık kodlarının hücresel entegrasyonu başlar. Bol su tüketin. Alanınızı arındırmak için üzerlik otu veya adaçayı tütsüsü yapın.',
       KpColors.storm,
     );
   } else if (kp < 7) {
     return const KpDetails(
-      'Kozmik Entegrasyon (G2 Manyetik Aktivite)',
+      'Kozmik Entegrasyon (G2)',
       'Işık Beden Aktivasyonu & Uyumlanma',
-      'Orta şiddette manyetik uyarım. Evrensel enerjinin hücresel düzeyde entegrasyonu gerçekleşiyor. Işık beden aktivasyonu, DNA şablonunun güncellenmesi ve yüksek boyutlu frekanslara uyumlanmak için bu zaman dilimini niyet çalışmaları ve sessiz tefekkür ile değerlendirebilirsiniz.',
+      'G2 seviyesinde orta şiddetli jeomanyetik fırtına. İyonosfer katmanında belirgin bir alçalma ve elektrik iletkenliğinde yoğunlaşma ölçülüyor.',
+      'Kalp çakrasında uyarılma (çarpıntı hissi), eklem ağrıları ve gün içinde ani esneme veya yorgunluk dalgaları.',
+      'Işık beden aktivasyon süreci. Ağır yiyeceklerden kaçının, tuzlu su banyosu ile aurik alanınızı temizleyip dinlenmeye özen gösterin.',
       KpColors.storm,
     );
   } else if (kp < 8) {
     return const KpDetails(
-      'Portal Geçişi (G3 Manyetik Aktivite)',
+      'Portal Geçişi (G3)',
       'Yoğun Işık Kodları & Çakra Dengeleme',
-      'Güçlü bir manyetik aktivite dalgası. Aura alanınız yoğun kozmik ışık kodlarıyla yıkanıyor. Duygusal dalgalanmalar ve uykuya dalışta zorlanmalar, eski kalıpların salınımına işaret eder. Çakra dengeleme, kalp kapısını açma ve kristal şifa meditasyonları için zirve noktası.',
+      'G3 seviyesinde güçlü jeomanyetik fırtına. Kutup ışıkları (aurora) alt enlemlere iniyor. Manyetik kalkan büyük ölçüde geçirgenleşti.',
+      'Yoğun uykusuzluk, astral seyahat deneyimleri, sinir sisteminde aşırı elektriklenme hissi, derin rüyalar ve vizyonlar.',
+      'Büyük bir kozmik kapı açıldı. Eski duygusal yükleri ve karmik bağları kesmek için niyet çalışmaları yapın. Selenit taşı ile topraklanın.',
       KpColors.portal,
     );
   } else if (kp < 9) {
     return const KpDetails(
-      'Hücresel Dönüşüm (G4 Manyetik Aktivite)',
+      'Hücresel Dönüşüm (G4)',
       'Yüksek Boyutlu Frekans Uyumu',
-      'Şiddetli manyetik uyarım ve kozmik akış. Hücreleriniz ve DNA iplikçikleriniz yüksek güneş kodlarını soğuruyor. Bu yoğun enerji altında kendinizi zorlamadan sessizce uzanarak meditasyon yapabilir, aura temizliği ve uyanış niyetlerinize odaklanarak kozmik akışla bütünleşebilirsiniz.',
+      'G4 seviyesinde çok şiddetli jeomanyetik fırtına. Dünya genelinde elektrik şebekelerinde voltaj düzensizlikleri ve yoğun jeomanyetik akış.',
+      'Aşırı duyarlı duyular (ışık ve sese hassasiyet), baş dönmesi, vücutta karıncalanma ve epifiz bezinde yoğun uyarılma.',
+      'Hücresel düzeyde derin bir DNA güncellemesi. Fiziksel bedeni zorlamayın. Toprağa basarak veya tuzlu suyla topraklanmayı sağlayın.',
       KpColors.portal,
     );
   } else {
     return const KpDetails(
       'Ekstrem Kozmik Portal (G5)',
       'Kolektif Bilinçte Muazzam Vites Değişimi',
-      'Zirve seviyede elektromanyetik uyanış ve ışık portalı! Kolektif bilinçte muazzam bir vites değişimi. Bu olağanüstü kozmik akışı sessizce oturup taç ve kalp çakralarınızdan tüm bedeninize akan beyaz ışığı imgeleyerek, derin frekans meditasyonları ve DNA aktivasyon niyetleriyle taçlandırın.',
+      'G5 seviyesinde ekstrem jeomanyetik fırtına. Manyetik kalkanda tam geçirgenlik durumu ve iyonosferde maksimum düzeyde uyarılma.',
+      'Zamansızlık hissi, uyku düzeninin tamamen bozulması, yüksek zihinsel uyanıklık ile fiziksel yorgunluğun bir arada yaşanması.',
+      'Kolektif bilinçte boyutsal geçiş ve vites değişimi. Taç çakranızdan bedeninize beyaz bir ışık sütununun indiğini imgeleyerek meditasyon yapın.',
       KpColors.extreme,
     );
   }

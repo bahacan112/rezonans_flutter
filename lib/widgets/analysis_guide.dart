@@ -5,33 +5,95 @@ import '../theme.dart';
 class AnalysisCard extends StatelessWidget {
   final String title;
   final String spiritual;
-  final String text;
+  final String scientific;
+  final String physical;
+  final String spiritualGuidance;
   const AnalysisCard({
     super.key,
     required this.title,
     required this.spiritual,
-    required this.text,
+    required this.scientific,
+    required this.physical,
+    required this.spiritualGuidance,
   });
 
   @override
-  Widget build(BuildContext context) => Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: AppColors.bgCard,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.primaryGold.withValues(alpha: 0.15)),
-        ),
-        padding: const EdgeInsets.all(16),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(title,
-              style: AppText.sans(size: 19, weight: FontWeight.w700, color: AppColors.primaryGold)),
-          const SizedBox(height: 5),
-          Text(spiritual,
-              style: AppText.sans(size: 16, weight: FontWeight.w600, color: Colors.white)),
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColors.bgCard,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.primaryGold.withValues(alpha: 0.15)),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: AppText.sans(size: 17, weight: FontWeight.w800, color: AppColors.primaryGold)),
+          const SizedBox(height: 3),
+          Text(spiritual, style: AppText.sans(size: 14, weight: FontWeight.w600, color: Colors.white)),
+          const SizedBox(height: 16),
+          _buildSectionBlock(
+            icon: Icons.science,
+            label: 'BİLİMSEL TEŞHİS',
+            content: scientific,
+            color: Colors.cyanAccent,
+          ),
+          _buildSectionBlock(
+            icon: Icons.bolt,
+            label: 'BEDEN REAKSİYONLARI',
+            content: physical,
+            color: Colors.amberAccent,
+          ),
+          _buildSectionBlock(
+            icon: Icons.spa,
+            label: 'RUHSAL REHBERLİK',
+            content: spiritualGuidance,
+            color: Colors.pinkAccent,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionBlock({
+    required IconData icon,
+    required String label,
+    required String content,
+    required Color color,
+  }) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0C0C14),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withValues(alpha: 0.08)),
+      ),
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 15, color: color),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: AppText.sans(size: 11, weight: FontWeight.w800, color: color, letterSpacing: 0.5),
+              ),
+            ],
+          ),
           const SizedBox(height: 8),
-          Text(text, style: AppText.sans(size: 16, height: 1.55, color: AppColors.textMuted)),
-        ]),
-      );
+          Text(
+            content,
+            style: AppText.sans(size: 13, height: 1.45, color: AppColors.textMuted),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 const _guide = [

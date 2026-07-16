@@ -212,7 +212,9 @@ class _MainScreenState extends State<MainScreen> {
                 AnalysisCard(
                   title: 'Schumann Kozmik Enerji Analizi',
                   spiritual: getKpSpiritualDetails(activeKp).spiritual,
-                  text: getKpSpiritualDetails(activeKp).desc,
+                  scientific: getKpSpiritualDetails(activeKp).scientific,
+                  physical: getKpSpiritualDetails(activeKp).physical,
+                  spiritualGuidance: getKpSpiritualDetails(activeKp).spiritualGuidance,
                 ),
                 const SizedBox(height: 15),
                 Simulator(
