@@ -14,6 +14,9 @@ import '../widgets/spectrogram.dart';
 import '../widgets/starfield.dart';
 import '../widgets/status_card.dart';
 import '../widgets/trend_chart.dart';
+import 'journal_screen.dart';
+import 'signals_screen.dart';
+import 'cosmic_monitor_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -31,6 +34,7 @@ class _MainScreenState extends State<MainScreen> {
   List<NotificationItem> notifications = [];
   Timer? _timer;
   HistoryPoint? selectedPoint;
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -126,11 +130,102 @@ class _MainScreenState extends State<MainScreen> {
     ];
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildBody() {
+    switch (_currentIndex) {
+      case 0:
+        return _buildDashboard();
+      case 1:
+        return const JournalScreen();
+      case 2:
+        return const SignalsScreen();
+      case 3:
+        return const CosmicMonitorScreen();
+      default:
+        return _buildDashboard();
+    }
+  }
+
+  Widget _buildDashboard() {
     final auth = context.watch<AuthProvider>();
     final user = auth.user;
     final isPremium = user?.isPremium ?? false;
+
+    return loading && data == null
+        ? const Center(child: CircularProgressIndicator(color: AppColors.primaryGold))
+        : RefreshIndicator(
+            onRefresh: () async {
+              await _load();
+              await _loadNotifications();
+            },
+            color: AppColors.primaryGold,
+            backgroundColor: AppColors.bgDark,
+            child: ListView(
+              padding: const EdgeInsets.all(15),
+              children: [
+                _accountCard(user),
+                const SizedBox(height: 15),
+                AnalysisCard(
+                  title: 'Schumann Kozmik Enerji Analizi',
+                  spiritual: getKpSpiritualDetails(activeKp).spiritual,
+                  text: getKpSpiritualDetails(activeKp).desc,
+                ),
+                const SizedBox(height: 15),
+                Simulator(
+                  simulating: simulating,
+                  value: simKp,
+                  onChanged: (v) => setState(() {
+                    simulating = true;
+                    simKp = v;
+                  }),
+                  onReset: () => setState(() {
+                    simulating = false;
+                    simKp = 0;
+                  }),
+                ),
+                const SizedBox(height: 15),
+                 StatusCard(
+                    kp: activeKp,
+                    updatedLabel: simulating
+                        ? 'Simülasyon Aktif'
+                        : _formatSelectedPointTime(selectedPoint)),
+                const SizedBox(height: 15),
+                Spectrogram(
+                  history: history,
+                  selectedPoint: selectedPoint,
+                  onSelected: (p) => setState(() => selectedPoint = p),
+                ),
+                const SizedBox(height: 15),
+                TrendChart(
+                  history: history,
+                  selectedPoint: selectedPoint,
+                  onSelected: (p) => setState(() => selectedPoint = p),
+                ),
+                const SizedBox(height: 15),
+                NotificationCard(
+                  isPremium: isPremium,
+                  prefs: prefs,
+                  onTogglePref: _togglePref,
+                  onUnlock: _showPremium,
+                ),
+                const SizedBox(height: 15),
+                const GuideAccordion(),
+                const SizedBox(height: 24),
+                Center(
+                  child: Text('Schumann Kozmik Portal © 2026',
+                      style: AppText.sans(size: 11, color: Colors.white24)),
+                ),
+                const SizedBox(height: 4),
+                Center(
+                  child: Text('v1.0.0 Flutter',
+                      style: AppText.mono(size: 10, color: Colors.white12)),
+                ),
+              ],
+            ),
+          );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final glow = getKpSpiritualDetails(activeKp).color;
 
     return Scaffold(
@@ -140,82 +235,48 @@ class _MainScreenState extends State<MainScreen> {
           child: Column(children: [
             _header(),
             Expanded(
-              child: loading && data == null
-                  ? const Center(child: CircularProgressIndicator(color: AppColors.primaryGold))
-                  : RefreshIndicator(
-                      onRefresh: () async {
-                        await _load();
-                        await _loadNotifications();
-                      },
-                      color: AppColors.primaryGold,
-                      backgroundColor: AppColors.bgDark,
-                      child: ListView(
-                        padding: const EdgeInsets.all(15),
-                        children: [
-                          _accountCard(user),
-                          const SizedBox(height: 15),
-                          AnalysisCard(
-                            title: 'Schumann Kozmik Enerji Analizi',
-                            spiritual: getKpSpiritualDetails(activeKp).spiritual,
-                            text: getKpSpiritualDetails(activeKp).desc,
-                          ),
-                          const SizedBox(height: 15),
-                          Simulator(
-                            simulating: simulating,
-                            value: simKp,
-                            onChanged: (v) => setState(() {
-                              simulating = true;
-                              simKp = v;
-                            }),
-                            onReset: () => setState(() {
-                              simulating = false;
-                              simKp = 0;
-                            }),
-                          ),
-                          const SizedBox(height: 15),
-                           StatusCard(
-                              kp: activeKp,
-                              updatedLabel: simulating
-                                  ? 'Simülasyon Aktif'
-                                  : _formatSelectedPointTime(selectedPoint)),
-                          const SizedBox(height: 15),
-                          Spectrogram(
-                            history: history,
-                            selectedPoint: selectedPoint,
-                            onSelected: (p) => setState(() => selectedPoint = p),
-                          ),
-                          const SizedBox(height: 15),
-                          TrendChart(
-                            history: history,
-                            selectedPoint: selectedPoint,
-                            onSelected: (p) => setState(() => selectedPoint = p),
-                          ),
-                          const SizedBox(height: 15),
-                          NotificationCard(
-                            isPremium: isPremium,
-                            prefs: prefs,
-                            onTogglePref: _togglePref,
-                            onUnlock: _showPremium,
-                          ),
-                          const SizedBox(height: 15),
-                          const GuideAccordion(),
-                          const SizedBox(height: 24),
-                          Center(
-                            child: Text('Schumann Kozmik Portal © 2026',
-                                style: AppText.sans(size: 11, color: Colors.white24)),
-                          ),
-                          const SizedBox(height: 4),
-                          Center(
-                            child: Text('v1.0.0 Flutter',
-                                style: AppText.mono(size: 10, color: Colors.white12)),
-                          ),
-                        ],
-                      ),
-                    ),
+              child: _buildBody(),
             ),
           ]),
         ),
       ]),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: AppColors.borderLight)),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) => setState(() => _currentIndex = index),
+          backgroundColor: const Color(0xEE0A0A0F),
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: AppColors.primaryGold,
+          unselectedItemColor: AppColors.textMuted,
+          selectedLabelStyle: AppText.sans(size: 11, weight: FontWeight.w700),
+          unselectedLabelStyle: AppText.sans(size: 11),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.analytics_outlined),
+              activeIcon: Icon(Icons.analytics),
+              label: 'Gösterge Paneli',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.edit_note_outlined),
+              activeIcon: Icon(Icons.edit_note),
+              label: 'Kozmik Günlük',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.public_outlined),
+              activeIcon: Icon(Icons.public),
+              label: 'Kolektif Bilinç',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.wb_sunny_outlined),
+              activeIcon: Icon(Icons.wb_sunny),
+              label: 'Güneş & Kozmik',
+            ),
+          ],
+        ),
+      ),
     );
   }
 

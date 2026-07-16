@@ -156,6 +156,301 @@ class ApiClient {
 
   Future<void> registerPushToken(String token, String fcmToken) =>
       _request('/me/push-token', method: 'POST', token: token, body: {'token': fcmToken});
+
+  Future<JournalEntry> saveJournal(
+    String token, {
+    String? date,
+    int? moodScore,
+    Map<String, bool>? symptoms,
+    String? notes,
+    String? city,
+    String? countryCode,
+    double? cityLatitude,
+    double? cityLongitude,
+  }) async {
+    final d = await _request(
+      '/me/journal',
+      method: 'POST',
+      token: token,
+      body: {
+        'date': date,
+        'mood_score': moodScore,
+        'symptoms': symptoms,
+        'notes': notes,
+        'city': city,
+        'country_code': countryCode,
+        'city_latitude': cityLatitude,
+        'city_longitude': cityLongitude,
+      }..removeWhere((k, v) => v == null),
+    );
+    return JournalEntry.fromJson(d['journal']);
+  }
+
+  Future<List<JournalEntry>> getJournals(String token, {String? from, String? to}) async {
+    final d = await _request(
+      '/me/journal?${from != null ? 'from=$from' : ''}${to != null ? '&to=$to' : ''}',
+      token: token,
+    );
+    return (d['items'] as List).map((e) => JournalEntry.fromJson(e)).toList();
+  }
+
+  Future<JournalEntry?> getJournal(String token, String date) async {
+    try {
+      final d = await _request('/me/journal/$date', token: token);
+      return JournalEntry.fromJson(d['journal']);
+    } catch (e) {
+      if (e is ApiException && e.status == 404) return null;
+      rethrow;
+    }
+  }
+
+  Future<CorrelationReport> getCorrelationAnalysis(String token) async {
+    final d = await _request('/me/journal/correlation-analysis', token: token);
+    return CorrelationReport.fromJson(d);
+  }
+
+  Future<void> sendSignal({
+    String? token,
+    required String city,
+    required String countryCode,
+    required double cityLatitude,
+    required double cityLongitude,
+    required List<String> symptoms,
+  }) async {
+    await _request(
+      '/signals',
+      method: 'POST',
+      token: token,
+      body: {
+        'city': city,
+        'country_code': countryCode,
+        'city_latitude': cityLatitude,
+        'city_longitude': cityLongitude,
+        'symptoms': symptoms,
+      },
+    );
+  }
+
+  Future<List<LiveSignal>> getLiveSignals({int hours = 3}) async {
+    final d = await _request('/signals/live?hours=$hours');
+    return (d['items'] as List).map((e) => LiveSignal.fromJson(e)).toList();
+  }
+
+  Future<CitySymptomDistribution> getCitySignals(String token, String city, {int hours = 3}) async {
+    final d = await _request('/signals/city/${Uri.encodeComponent(city)}?hours=$hours', token: token);
+    return CitySymptomDistribution.fromJson(d);
+  }
+
+  Future<UserProfile> getProfile(String token) async {
+    final d = await _request('/me/profile', token: token);
+    return UserProfile.fromJson(d['profile']);
+  }
+
+  Future<UserProfile> updateProfile(
+    String token, {
+    String? timezone,
+    String? homeCity,
+    String? homeCountry,
+  }) async {
+    final d = await _request(
+      '/me/profile',
+      method: 'PUT',
+      token: token,
+      body: {
+        'timezone': timezone,
+        'home_city': homeCity,
+        'home_country': homeCountry,
+      }..removeWhere((k, v) => v == null),
+    );
+    return UserProfile.fromJson(d['profile']);
+  }
 }
 
 final api = ApiClient();
+
+class JournalEntry {
+  final String id;
+  final String userId;
+  final String date;
+  final int? moodScore;
+  final Map<String, bool> symptoms;
+  final String? notes;
+  final String? city;
+  final String? countryCode;
+  final double? cityLatitude;
+  final double? cityLongitude;
+
+  JournalEntry({
+    required this.id,
+    required this.userId,
+    required this.date,
+    this.moodScore,
+    required this.symptoms,
+    this.notes,
+    this.city,
+    this.countryCode,
+    this.cityLatitude,
+    this.cityLongitude,
+  });
+
+  factory JournalEntry.fromJson(Map<String, dynamic> json) {
+    final rawSymptoms = json['symptoms'] as Map<String, dynamic>? ?? {};
+    final symptomsMap = rawSymptoms.map((key, value) => MapEntry(key, value == true));
+
+    return JournalEntry(
+      id: json['id'] as String,
+      userId: json['userId'] as String,
+      date: json['date'] as String,
+      moodScore: json['moodScore'] as int?,
+      symptoms: symptomsMap,
+      notes: json['notes'] as String?,
+      city: json['city'] as String?,
+      countryCode: json['countryCode'] as String?,
+      cityLatitude: json['cityLatitude'] != null ? (json['cityLatitude'] as num).toDouble() : null,
+      cityLongitude: json['cityLongitude'] != null ? (json['cityLongitude'] as num).toDouble() : null,
+    );
+  }
+}
+
+class CorrelationValue {
+  final double? r;
+  final String label;
+
+  CorrelationValue(this.r, this.label);
+
+  factory CorrelationValue.fromJson(Map<String, dynamic> json) {
+    return CorrelationValue(
+      json['r'] != null ? (json['r'] as num).toDouble() : null,
+      json['label'] as String? ?? 'Bilinmiyor',
+    );
+  }
+}
+
+class CorrelationReport {
+  final String from;
+  final String to;
+  final int daysAnalyzed;
+  final CorrelationValue moodVsKp;
+  final CorrelationValue moodVsSchumann;
+  final CorrelationValue symptomCountVsKp;
+  final CorrelationValue symptomCountVsSchumann;
+  final String note;
+
+  CorrelationReport({
+    required this.from,
+    required this.to,
+    required this.daysAnalyzed,
+    required this.moodVsKp,
+    required this.moodVsSchumann,
+    required this.symptomCountVsKp,
+    required this.symptomCountVsSchumann,
+    required this.note,
+  });
+
+  factory CorrelationReport.fromJson(Map<String, dynamic> json) {
+    final range = json['range'] as Map<String, dynamic>? ?? {};
+    final corr = json['correlations'] as Map<String, dynamic>? ?? {};
+    return CorrelationReport(
+      from: range['from'] as String? ?? '',
+      to: range['to'] as String? ?? '',
+      daysAnalyzed: json['daysAnalyzed'] as int? ?? 0,
+      moodVsKp: CorrelationValue.fromJson(corr['mood_vs_kp'] ?? {}),
+      moodVsSchumann: CorrelationValue.fromJson(corr['mood_vs_schumann'] ?? {}),
+      symptomCountVsKp: CorrelationValue.fromJson(corr['symptomCount_vs_kp'] ?? {}),
+      symptomCountVsSchumann: CorrelationValue.fromJson(corr['symptomCount_vs_schumann'] ?? {}),
+      note: json['note'] as String? ?? '',
+    );
+  }
+}
+
+class LiveSignal {
+  final String id;
+  final String city;
+  final String countryCode;
+  final double cityLatitude;
+  final double cityLongitude;
+  final List<String> symptoms;
+  final DateTime feltAt;
+
+  LiveSignal({
+    required this.id,
+    required this.city,
+    required this.countryCode,
+    required this.cityLatitude,
+    required this.cityLongitude,
+    required this.symptoms,
+    required this.feltAt,
+  });
+
+  factory LiveSignal.fromJson(Map<String, dynamic> json) {
+    return LiveSignal(
+      id: json['id'] as String? ?? '',
+      city: json['city'] as String? ?? '',
+      countryCode: json['countryCode'] as String? ?? '',
+      cityLatitude: (json['cityLatitude'] as num).toDouble(),
+      cityLongitude: (json['cityLongitude'] as num).toDouble(),
+      symptoms: (json['symptoms'] as List? ?? []).map((e) => e as String).toList(),
+      feltAt: DateTime.parse(json['feltAt'] as String),
+    );
+  }
+}
+
+class CitySymptomCount {
+  final String slug;
+  final int count;
+  final int percent;
+
+  CitySymptomCount({required this.slug, required this.count, required this.percent});
+
+  factory CitySymptomCount.fromJson(Map<String, dynamic> json) {
+    return CitySymptomCount(
+      slug: json['slug'] as String? ?? '',
+      count: json['count'] as int? ?? 0,
+      percent: json['percent'] as int? ?? 0,
+    );
+  }
+}
+
+class CitySymptomDistribution {
+  final String city;
+  final int total;
+  final List<CitySymptomCount> symptoms;
+
+  CitySymptomDistribution({required this.city, required this.total, required this.symptoms});
+
+  factory CitySymptomDistribution.fromJson(Map<String, dynamic> json) {
+    return CitySymptomDistribution(
+      city: json['city'] as String? ?? '',
+      total: json['total'] as int? ?? 0,
+      symptoms: (json['symptoms'] as List? ?? [])
+          .map((e) => CitySymptomCount.fromJson(e))
+          .toList(),
+    );
+  }
+}
+
+class UserProfile {
+  final String userId;
+  final bool isPremium;
+  final String timezone;
+  final String? homeCity;
+  final String? homeCountry;
+
+  UserProfile({
+    required this.userId,
+    required this.isPremium,
+    required this.timezone,
+    this.homeCity,
+    this.homeCountry,
+  });
+
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    return UserProfile(
+      userId: json['userId'] as String? ?? '',
+      isPremium: json['isPremium'] == true,
+      timezone: json['timezone'] as String? ?? 'UTC',
+      homeCity: json['homeCity'] as String?,
+      homeCountry: json['homeCountry'] as String?,
+    );
+  }
+}
